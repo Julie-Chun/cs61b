@@ -48,7 +48,6 @@ public class NBody{
 		Double[] yForces = new Double[bb.length];
 		
 		while (time < T){
-			System.out.println("time: "+ time+ " ; T: "+T);
 			//storing x and y forces exerted in an array until time's up.
 			for (int p = 0; p < bb.length; p++){
 				xForces[p] = bb[p].calcNetForceExertedByX(bb);
