@@ -43,17 +43,30 @@ public class Body{
 		return force;
 	}
 
+	//calculated the force exerted in the X direction.
+	public double calcForceExertedByX(Body b){
+		double dx = b.xxPos - xxPos;
+		double dist = calcDistance(b);
+		double force = calcForceExertedBy(b);
+		double xf = (force*dx)/(dist);
+		return xf;
+	}
+
+	//calculated the force exerted in the Y direction.
+	public double calcForceExertedByY(Body b){
+		double dy = b.yyPos - yyPos;
+		double dist = calcDistance(b);
+		double force = calcForceExertedBy(b);
+		double yf = (force*dy)/(dist);
+		return yf;
+	}
 	//Calculates the net X force exerted by all bodies from an input of an array of bodies on the current Body.
 	public double calcNetForceExertedByX(Body[] arrB){
 		double netX = 0.0;
 
 		for (Body b: arrB){
 			if (!(equals(b))){
-				double force = calcForceExertedBy(b);
-				double dist = calcDistance(b);
-				double dx = b.xxPos - xxPos;
-				double xForce = (force*dx)/dist;
-				netX += xForce;
+				netX += calcForceExertedByX(b);
 			}
 
 		}
@@ -66,11 +79,7 @@ public class Body{
 
 		for (Body b: arrB){
 			if (!(equals(b))){
-				double force = calcForceExertedBy(b);
-				double dist = calcDistance(b);
-				double dy = b.yyPos - yyPos;
-				double yForce = (force*dy)/dist;
-				netY += yForce;
+				netY += calcForceExertedByY(b);
 			}
 		}
 		return netY;
