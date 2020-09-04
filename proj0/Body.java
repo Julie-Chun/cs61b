@@ -35,7 +35,7 @@ public class Body{
 	}
 
 	//calculates the double value force exerted by input Body 'b' on a given Body.
-	static final double gravity = 0.0000000000667;
+	private static final double gravity = 0.0000000000667;
 	
 	public double calcForceExertedBy(Body b){
 		double dist = calcDistance(b);
