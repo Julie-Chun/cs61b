@@ -13,9 +13,9 @@ public class NBody{
 		int p = in2.readInt();
 		double r = in2.readDouble();
 
-		Body[] arr = new Body[5];
+		Body[] arr = new Body[p];
 		
-		for (int i = 0; i < arr.length; i++){
+		for (int i = 0; i < p; i++){
 			double xp = in2.readDouble();
 			double yp = in2.readDouble();
 			double xv = in2.readDouble();
@@ -54,6 +54,7 @@ public class NBody{
 				yForces[p] = bb[p].calcNetForceExertedByY(bb);
 			}
 
+			//updating the forces of each planet in Body[] array.
 			for (int l = 0; l < bb.length; l++){
 				bb[l].update(dt,xForces[l],yForces[l]);
 			}
