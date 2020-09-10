@@ -10,7 +10,7 @@ public class DebugExercise3 {
             double cost = in.readDouble();
             int numAvailable = in.readInt();
             if (foodType.equals("turnip")) {
-                int newTotal = totalTurnips + numAvailable;
+                int newTotal = totalTurnips + numAvailable; //Math.abs the numAvailable or add condition that if numAvailable is negative, make it zero. Depends on the purpose of the code.
                 totalTurnips = newTotal;
             }
         }
