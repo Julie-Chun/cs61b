@@ -6,6 +6,12 @@ public class Flik {
      *  @param b Value 2
      *  @return Whether a and b are the same */
     public static boolean isSameNumber(Integer a, Integer b) {
-        return a == b;
+        return a.equals(b);
+        /**the bug was caused by the difference between the = function
+         * and the .equals function. one of them checks for if the values
+         * are equivalent while the other checks to see if the actual
+         * object is the same.
+         */
+
     }
 }
