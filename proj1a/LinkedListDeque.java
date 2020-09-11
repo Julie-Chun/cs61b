@@ -4,23 +4,38 @@ public class LinkedListDeque<T>{
     public TNode last;
 
     public LinkedListDeque(){
-        first.item = -111;
-        last.item = -999;
+        first.value = -111;
+        last.value = -999;
         size = 0;
+
+        /* Making circular sentinel topology*/
+        first.next = first.prev = last;
+        last.next = last.prev = first;
     }
 
     public void addFirst(T item){
+        TNode oldFirst = first.next;
         first.next = new TNode(item);
-        size ++;
+        first.next.next = oldFirst;
+        first.next.prev = first;
+        oldFirst.prev = first.next;
+        size++;
     }
 
     public void addLast(T item){
-
+        TNode oldLast = last.prev;
+        last.prev = new TNode(item);
+        last.prev.next = last;
+        last.prev.prev = oldLast;
+        oldLast.next = last.prev;
+        size--;
     }
 
     public boolean isEmpty(){
-
-        return true;
+        if (first.next == last && last.prev == first) {
+            return true;
+        }
+        return false;
     }
 
     public int size(){
@@ -28,7 +43,8 @@ public class LinkedListDeque<T>{
     }
 
     public void printDeque(){
-
+        TNode current = first.next;
+        while ()
     }
 
     public T removeFirst(){
@@ -45,5 +61,22 @@ public class LinkedListDeque<T>{
 
         return null;
     }
+
+    static class TNode<T>{
+        public TNode prev;
+        public TNode next;
+        public T value;
+
+        public TNode(T val){
+            this(null,val,null);
+        }
+
+        public TNode(TNode p, T val, TNode n){
+            prev = p;
+            value = val;
+            next = n;
+        }
+    }
 }
+
 
