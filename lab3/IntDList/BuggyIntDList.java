@@ -54,7 +54,7 @@ public class BuggyIntDList extends IntDList {
         }
     }
 
-    /**
+    /**.
      * Reverses IntDList in-place (destructive). Does not create a new IntDList.
      */
     public void reverse() {
