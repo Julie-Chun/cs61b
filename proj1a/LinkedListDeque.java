@@ -1,19 +1,33 @@
-public class LinkedListDeque<T>{
+/**
+ * @author juliechun
+ *  Creates a class of linked lists of TNodes.
+ *  */
 
-    public int size;
-    public TNode sentinel;
-    public TNode first;
-    public TNode last;
+public class LinkedListDeque<T> {
 
-    public LinkedListDeque(){
-        sentinel = new TNode (null);
+    /** Creating list size. */
+    private int size;
+
+    /** Creating sentinel TNode. */
+    private TNode sentinel;
+
+    /** Creating first to reference first TNode in list. */
+    private TNode first;
+
+    /** Creating last to reference last TNode in list. */
+    private TNode last;
+
+    /** initiating all instance variables. */
+    public LinkedListDeque() {
+        sentinel = new TNode(null);
         sentinel.next = sentinel.prev = sentinel;
         first = sentinel.next;
         last = sentinel.prev;
         size = 0;
     }
 
-    public void addFirst(T item){
+    /** adds @param item to the front of the list after sentinel. */
+    public void addFirst(T item) {
         TNode oldFirst = first;
         first = new TNode(item);
         first.prev = sentinel;
@@ -28,7 +42,8 @@ public class LinkedListDeque<T>{
         size++;
     }
 
-    public void addLast(T item){
+    /** adds @param item to the back of the list before sentinel. */
+    public void addLast(T item) {
         TNode oldLast = last;
         last = new TNode(item);
         last.next = sentinel;
@@ -43,18 +58,21 @@ public class LinkedListDeque<T>{
         size++;
     }
 
-    public boolean isEmpty(){
+    /** @returns true if list is empty, null is not. */
+    public boolean isEmpty() {
         if (size == 0) {
             return true;
         }
         return false;
     }
 
-    public int size(){
+    /** returns size of the list. */
+    public int size() {
         return size;
     }
 
-    public void printDeque(){
+    /** prints all items in the list. */
+    public void printDeque() {
         TNode current = first;
 
         while (current != sentinel) {
@@ -65,7 +83,8 @@ public class LinkedListDeque<T>{
         System.out.println();
     }
 
-    public T removeFirst(){
+    /** @return value of first node and removes it from the list. */
+    public T removeFirst() {
         if (size != 0) {
             TNode oldFirst = first;
             first = oldFirst.next;
@@ -77,7 +96,8 @@ public class LinkedListDeque<T>{
         return null;
     }
 
-    public T removeLast(){
+    /** @return value of last node and removes it from the list. */
+    public T removeLast() {
         if (size != 0) {
             TNode oldLast = last;
             last = oldLast.prev;
@@ -90,8 +110,8 @@ public class LinkedListDeque<T>{
         return null;
     }
 
-    // CHECK THE GETS
-    public T get(int index){
+    /** @returns value of item at index @param index of the list. */
+    public T get(int index) {
         TNode current = first;
 
         if (index < size) {
@@ -109,12 +129,15 @@ public class LinkedListDeque<T>{
         return null;
     }
 
+    /** @returns value of item at index @param index
+     * of the list using recursion.
+     * */
     public T getRecursive(int index) {
         T result = (T) first.value;
 
         if (index > size) {
             return null;
-        } else if (index > 0){
+        } else if (index > 0) {
             first = first.next;
             result = getRecursive(index - 1);
             first = first.prev;
@@ -123,16 +146,30 @@ public class LinkedListDeque<T>{
         return result;
     }
 
-    static class TNode<T>{
-        public TNode prev;
-        public TNode next;
-        public T value;
+    /** helper class that creates TNodes. */
+    private static class TNode<T> {
+        /** indicates the previous node. */
+        private TNode prev;
 
-        public TNode(T val){
-            this(null,val,null);
+        /** indicates the next node. */
+        private TNode next;
+
+        /** indicates the value of the item in node. */
+        private T value;
+
+        /** declares instance variables with
+         * just @param val as item.
+         * */
+        private TNode(T val) {
+            this(null, val, null);
         }
 
-        public TNode(TNode p, T val, TNode n){
+        /** an internal declaration of instance variables.
+         * @param p for the previous node
+         * @param n for the following node
+         * @param val as the value of the item.
+         * */
+        private TNode(TNode p, T val, TNode n) {
             prev = p;
             value = val;
             next = n;

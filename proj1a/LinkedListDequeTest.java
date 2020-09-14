@@ -212,7 +212,7 @@ public class LinkedListDequeTest {
 
 	}
 
-	 */
+	//Checking class ArrayDeque
 
 	public static boolean checkaddFirstAD(int expected, int actual) {
 		if (expected != actual) {
@@ -229,8 +229,6 @@ public class LinkedListDequeTest {
 		ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 
 		//testing the addFirst of ArrayDeque
-		boolean passed = checkaddFirstAD(4, lld1.nextFirst); //checks is nextFirst is in the right place
-		passed = checkaddFirstAD(5, lld1.nextLast) && passed;//checks is nextLast is in the right place
 
 		lld1.addLast(5);
 		lld1.addLast(2);
@@ -244,11 +242,10 @@ public class LinkedListDequeTest {
 		lld1.removeFirst();
 		lld1.removeLast();
 
-
-		passed = checkaddFirstAD(1, lld1.nextFirst) && passed;//checks is nextFirst is in the right place
-		passed = checkaddFirstAD(9, lld1.nextLast) && passed;
-		passed = checkaddFirstAD(-10, lld1.get(4)) && passed;
-		passed = checkaddFirstAD(7, lld1.size) && passed;//checking the size
+		boolean passed = checkaddFirstAD(14, lld1.get(0));//checks is nextFirst is in the right place
+		passed = checkaddFirstAD(8, lld1.get(lld1.size() - 1)) && passed;
+		passed = checkaddFirstAD(47, lld1.get(4)) && passed;
+		passed = checkaddFirstAD(9, lld1.size()) && passed;//checking the size
 
 		//checking if ArrayDeque keeps the usage factor.
 		lld1.addFirst(0);
@@ -279,6 +276,39 @@ public class LinkedListDequeTest {
 		printTestStatus(passed);
 
 	}
+	*/
+
+	public static boolean checkisEmptyAD(boolean expected, boolean actual) {
+		if (expected != actual) {
+			System.out.println("isEmpty() returned " + actual + ", but expected: " + expected);
+			return false;
+		}
+		return true;
+	}
+
+	public static void isEmptyADTest() {
+
+		System.out.println("Running isEmptyAD test.");
+
+		ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+
+		//testing the isEmpty of ArrayDeque
+		lld1.addFirst(14);
+		lld1.removeFirst();
+		boolean passed = checkisEmptyAD(true, lld1.isEmpty()); //checks if the list is empty
+
+		lld1.addFirst(56);
+		lld1.removeLast();
+		passed = checkisEmptyAD(true, lld1.isEmpty()) && passed;
+
+		lld1.addFirst(5);
+		lld1.addFirst(21);
+		lld1.removeLast();
+		passed = checkisEmptyAD(false, lld1.isEmpty()) && passed;
+
+		lld1.printDeque(); //can check if array is printed correctly
+		printTestStatus(passed);
+	}
 
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
@@ -289,5 +319,6 @@ public class LinkedListDequeTest {
 		//getTest();
 		//getRecursiveTest();
 		//addFirstADTest();
+		isEmptyADTest();
 	}
 } 
