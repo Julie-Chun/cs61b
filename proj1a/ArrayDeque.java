@@ -48,24 +48,19 @@ public class ArrayDeque<T> {
         if (items.length > 15) {
             double usageFactor = (double) size / (double) items.length;
             if (usageFactor < 0.25) {
-                T[] smaller = (T[]) new Object[size + 2];
+                T[] smaller = (T[]) new Object[size / 2];
                 System.arraycopy(items, nextFirst, smaller, 0, size + 2);
                 items = smaller;
                 nextLast = size + 1;
                 nextFirst = 0;
             }
         }
-        if (nextFirst < 0) {
-            T[] larger = (T[]) new Object[items.length + 1];
+        if (nextFirst < 0 || nextLast >= items.length) {
+            T[] larger = (T[]) new Object[size * 2];
             System.arraycopy(items, 0, larger, nextFirst + 2, items.length - 1);
             items = larger;
-            nextFirst++;
-            nextLast++;
-        }
-        if (nextLast >= items.length) {
-            T[] larger = (T[]) new Object[items.length + 1];
-            System.arraycopy(items, 0, larger, 0, items.length);
-            items = larger;
+            nextFirst = (size / 2) - 1;
+            nextLast = (size / 2) + size;
         }
     }
     /** @return true if the array list is empty. */

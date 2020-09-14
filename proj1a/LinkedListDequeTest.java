@@ -278,9 +278,10 @@ public class LinkedListDequeTest {
 	}
 	*/
 
+	/** check is isEmpty() is functional for ArrayDeque.
 	public static boolean checkisEmptyAD(boolean expected, boolean actual) {
 		if (expected != actual) {
-			System.out.println("isEmpty() returned " + actual + ", but expected: " + expected);
+			System.out.println("isEmptyADTest(T item) returned " + actual + ", but expected: " + expected);
 			return false;
 		}
 		return true;
@@ -288,11 +289,12 @@ public class LinkedListDequeTest {
 
 	public static void isEmptyADTest() {
 
-		System.out.println("Running isEmptyAD test.");
+		System.out.println("Running addFirstAD test.");
 
 		ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 
 		//testing the isEmpty of ArrayDeque
+
 		lld1.addFirst(14);
 		lld1.removeFirst();
 		boolean passed = checkisEmptyAD(true, lld1.isEmpty()); //checks if the list is empty
@@ -309,6 +311,7 @@ public class LinkedListDequeTest {
 		lld1.printDeque(); //can check if array is printed correctly
 		printTestStatus(passed);
 	}
+	*/
 
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
@@ -319,6 +322,6 @@ public class LinkedListDequeTest {
 		//getTest();
 		//getRecursiveTest();
 		//addFirstADTest();
-		isEmptyADTest();
+		//isEmptyADTest();
 	}
 } 
