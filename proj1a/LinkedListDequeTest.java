@@ -306,10 +306,111 @@ public class LinkedListDequeTest {
 		lld1.removeLast();
 		passed = checkisEmptyAD(false, lld1.isEmpty()) && passed;
 
+	 	lld1.removeFirst();
+	 	lld1.removeFirst();
+	 	passed = checkisEmptyAD(true, lld1.isEmpty()) && passed;
+
 		lld1.printDeque(); //can check if array is printed correctly
 		printTestStatus(passed);
 	}
-	*/
+
+
+	public static boolean checkaddRemoveAD(int expected, int actual) {
+		if (expected != actual) {
+			System.out.println("addRemoveADTest(T item) returned " + actual + ", but expected: " + expected);
+			return false;
+		}
+		return true;
+	}
+
+	public static void addRemoveADTest() {
+
+		System.out.println("Running addRemoveAD test.");
+
+		ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+
+		//testing the isEmpty of ArrayDeque
+
+		lld1.addFirst(14);
+		lld1.removeFirst();
+		boolean passed = checkaddRemoveAD(0, lld1.size()); //checks if the list is empty
+
+		lld1.addFirst(56);
+		lld1.removeLast();
+		passed = checkaddRemoveAD(0, lld1.size()) && passed;
+
+		lld1.addFirst(5);
+		lld1.addFirst(21);
+		lld1.removeLast();
+		passed = checkaddRemoveAD(1, lld1.size()) && passed;
+
+		lld1.addLast(1);
+		lld1.addLast(4);
+		lld1.addFirst(2);
+		lld1.addLast(17);
+		lld1.addLast(14);
+		lld1.addFirst(22);
+		lld1.addFirst(87);
+		lld1.addFirst(56);
+		lld1.addLast(0);
+
+		lld1.printDeque(); //can check if array is printed correctly
+		printTestStatus(passed);
+	}
+
+	public static boolean checkgetAD(int expected, int actual) {
+		if (expected != actual) {
+			System.out.println("getADTest(T item) returned " + actual + ", but expected: " + expected);
+			return false;
+		}
+		return true;
+	}
+
+	public static void getADTest() {
+
+		System.out.println("Running getADD test.");
+
+		ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+
+		//testing the isEmpty of ArrayDeque
+
+		lld1.addFirst(14);
+		boolean passed = checkgetAD(14, lld1.get(0)); //checks if the list is empty
+
+		lld1.addLast(56);
+		passed = checkgetAD(56, lld1.get(1)) && passed;
+
+		lld1.addFirst(5);
+		lld1.addLast(21);
+		passed = checkgetAD(5, lld1.get(0)) && passed;
+		passed = checkgetAD(14, lld1.get(1)) && passed;
+		passed = checkgetAD(56, lld1.get(2)) && passed;
+		passed = checkgetAD(21, lld1.get(3)) && passed;
+
+		lld1.removeLast();
+		lld1.removeLast();
+		lld1.removeLast();
+		lld1.removeLast();
+		lld1.removeFirst();//checks to see that it does not error.
+		lld1.removeLast(); //checks to see that it does not error.
+
+		lld1.addLast(1);
+		lld1.addLast(4);
+		lld1.addFirst(2);
+		lld1.addLast(17);
+		lld1.addLast(14);
+		lld1.addFirst(22);
+		lld1.addFirst(87);
+		lld1.addFirst(56);
+		lld1.addLast(0);
+		passed = checkgetAD(56, lld1.get(0)) && passed;
+		passed = checkgetAD(0, lld1.get(lld1.size() - 1)) && passed;
+
+
+		lld1.printDeque(); //can check if array is printed correctly
+		printTestStatus(passed);
+	}
+	 */
 
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
@@ -321,5 +422,7 @@ public class LinkedListDequeTest {
 		//getRecursiveTest();
 		//addFirstADTest();
 		//isEmptyADTest();
+		//addRemoveADTest();
+		//getADTest();
 	}
 }

@@ -31,49 +31,70 @@ public class ArrayDeque<T> {
     public void addFirst(T item) {
         items[nextFirst] = item;
         size++;
-        nextFirst--;
-        resize();
-    }
-    /** adds @param item to the end of the list. */
-    public void addLast(T item) {
-        items[nextLast] = item;
-        size++;
-        nextLast++;
-        resize();
-    }
 
-    /** rescales the list so that its usage factor is more
-     * than 25% and the nextFront and nextLast has a space in the list. */
-    private void resize() {
-        if (nextFirst < 0) {
-            T[] larger = (T[]) new Object[items.length + 1];
-            System.arraycopy(items, 0, larger, nextFirst + 2, items.length - 1);
-            items = larger;
-            nextFirst++;
-            nextLast++;
+        if (nextFirst == 0) {
+            nextFirst = items.length - 1;
+        } else {
+            nextFirst--;
         }
 
-        if (nextLast >= items.length) {
-            T[] larger = (T[]) new Object[items.length + 1];
-            System.arraycopy(items, 0, larger, 0, items.length);
-            items = larger;
+        if (size >= items.length) {
+            resize();
         }
 
         if (items.length > 15) {
             double usageFactor = (double) size / (double) items.length;
             if (usageFactor < 0.25) {
-                T[] smaller = (T[]) new Object[size + 2];
-                System.arraycopy(items, nextFirst, smaller, 0, size + 2);
-                items = smaller;
-                nextLast = size + 1;
-                nextFirst = 0;
+                resize();
             }
         }
+    }
+    /** adds @param item to the end of the list. */
+    public void addLast(T item) {
+        items[nextLast] = item;
+        size++;
+        if (nextLast == items.length) {
+            nextLast = 0;
+        } else {
+            nextLast++;
+        }
+
+        if (size >= items.length) {
+            resize();
+        }
+
+        if (items.length > 15) {
+            double usageFactor = (double) size / (double) items.length;
+            if (usageFactor < 0.25) {
+                resize();
+            }
+        }
+    }
+
+    /** rescales the list so that its usage factor is more
+     * than 25% and the nextFront and nextLast has a space in the list. */
+    private void resize() {
+        int first = nextFirst + 1;
+
+        if (nextFirst >= items.length) {
+            first = 0;
+        }
+
+        T[] holder = (T[]) new Object[size * 2];
+        System.arraycopy(items, first, holder, 0, items.length - first);
+
+        if (nextLast != 0) {
+            System.arraycopy(items, 0, holder, items.length - first, nextLast);
+        }
+        items = holder;
+        nextFirst = items.length - 1;
+        nextLast = size;
+
 
     }
     /** @return true if the array list is empty. */
     public boolean isEmpty() {
-        for (int i = nextFirst + 1; i < size + nextFirst + 1; i++) {
+        for (int i = 0; i < items.length; i++) {
             if (items[i] != null) {
                 return false;
             }
@@ -88,10 +109,24 @@ public class ArrayDeque<T> {
 
     /** prints the list of size size. */
     public void printDeque() {
+        int first = nextFirst + 1;
+
+        if (nextFirst >= items.length) {
+            first = 0;
+        }
+
         if (size > 0) {
-            for (int i = 0; i < items.length - 1; i++) {
+            for (int i = first; i < items.length; i++) {
                 if (items[i] != null) {
                     System.out.print(items[i] + " ");
+                }
+            }
+
+            if (nextLast != 0) {
+                for (int i = 0; i < first; i++) {
+                    if (items[i] != null) {
+                        System.out.print(items[i] + " ");
+                    }
                 }
             }
         }
@@ -101,11 +136,34 @@ public class ArrayDeque<T> {
     /** @return the first item of the list and removes it from the list. */
     public T removeFirst() {
         if (size > 0) {
-            T pop = items[nextFirst + 1];
-            items[nextFirst + 1] = null;
-            nextFirst++;
+            int first = nextFirst + 1;
+
+            if (nextFirst == items.length - 1) {
+                first = 0;
+            }
+
+            T pop = items[first];
+            items[first] = null;
+
+            if (nextFirst == items.length) {
+                nextFirst = 0;
+            } else {
+                nextFirst++;
+            }
+
             size--;
-            resize();
+
+            if (size >= items.length) {
+                resize();
+            }
+
+            if (items.length > 15) {
+                double usageFactor = (double) size / (double) items.length;
+                if (usageFactor < 0.25) {
+                    resize();
+                }
+            }
+
             return pop;
         }
         return null;
@@ -114,11 +172,34 @@ public class ArrayDeque<T> {
     /** @return the last item of the list and removes it from the list. */
     public T removeLast() {
         if (size > 0) {
-            T pop = items[nextLast - 1];
-            items[nextLast - 1] = null;
-            nextLast--;
+            int last = nextLast - 1;
+
+            if (nextLast == 0) {
+                last = items.length - 1;
+            }
+
+            T pop = items[last];
+            items[last] = null;
+
+            if (nextLast == 0) {
+                nextLast = items.length;
+            } else {
+                nextLast--;
+            }
+
             size--;
-            resize();
+
+            if (size >= items.length) {
+                resize();
+            }
+
+            if (items.length > 15) {
+                double usageFactor = (double) size / (double) items.length;
+                if (usageFactor < 0.25) {
+                    resize();
+                }
+            }
+
             return pop;
         }
         return null;
@@ -127,7 +208,7 @@ public class ArrayDeque<T> {
     /** @return the item of the list at @param index . */
     public T get(int index) {
         if (index < size) {
-            return items[nextFirst + 1 + index];
+            return items[(nextFirst + 1 + index) % items.length];
         }
         return null;
     }
