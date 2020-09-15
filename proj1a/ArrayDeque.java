@@ -45,6 +45,20 @@ public class ArrayDeque<T> {
     /** rescales the list so that its usage factor is more
      * than 25% and the nextFront and nextLast has a space in the list. */
     private void resize() {
+        if (nextFirst < 0) {
+            T[] larger = (T[]) new Object[items.length + 1];
+            System.arraycopy(items, 0, larger, nextFirst + 2, items.length - 1);
+            items = larger;
+            nextFirst++;
+            nextLast++;
+        }
+
+        if (nextLast >= items.length) {
+            T[] larger = (T[]) new Object[items.length + 1];
+            System.arraycopy(items, 0, larger, 0, items.length);
+            items = larger;
+        }
+
         if (items.length > 15) {
             double usageFactor = (double) size / (double) items.length;
             if (usageFactor < 0.25) {
@@ -55,18 +69,7 @@ public class ArrayDeque<T> {
                 nextFirst = 0;
             }
         }
-        if (nextFirst < 0) {
-            T[] larger = (T[]) new Object[items.length + 1];
-            System.arraycopy(items, 0, larger, nextFirst + 2, items.length - 1);
-            items = larger;
-            nextFirst++;
-            nextLast++;
-        }
-        if (nextLast >= items.length) {
-            T[] larger = (T[]) new Object[items.length + 1];
-            System.arraycopy(items, 0, larger, 0, items.length);
-            items = larger;
-        }
+
     }
     /** @return true if the array list is empty. */
     public boolean isEmpty() {
