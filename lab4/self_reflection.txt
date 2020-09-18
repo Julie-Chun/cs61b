@@ -4,27 +4,27 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: I thought it was a really good idea to create two resize methods.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I was proud to have a single resize function that covers all situations.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: While I am proud of my resize function, I thought that my resize function had too many if statements, and that was a bit inelegant when I could have just make two clean methods.
 
 Q: What did you learn by talking to your partner about writing ArrayDeque?
 
-A:
+A: We talked about how we could have used more abstraction in our methods which would give us more "confidence" in having our method work. Like  
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: I wish I knew about how much freedom I had with writing my code. For example, I thought that I had to use the arraycopy function instead of looping through my Deque.
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: I would have checked with someone first to see if I understood what ArrayDeque was supposed to be before coding.
 
 -----
 
@@ -32,27 +32,27 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: One example from the staff solution was that I am able to set expressions as a boolean instead of a boolean variable being returned to get a boolean return type.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I was able to make the recursive get method without a helper function, where I used a destructive method that changes first before the recursion, but restored first after the recursion.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: Its the same as what I was proud of, but I thought that using the classic recursion with the helper method would be more cleaner code.
 
 Q: What did you learn by talking to your partner about writing LinkedListDeque?
 
-A:
+A: I learned that many of us took that same approach for the methods in Linked List.
 
 Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
-A:
+A: I wish that I would have drew out the code, or the boxes by hand, first before trying the debugger feature.
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: I would erase useless code that took up some extra space.
 
 -----
 
@@ -60,4 +60,4 @@ Meta:
 
 Q: Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: I thought this is a great idea to be able to see what the staff would expect in solutions and see the other ways in which other people implemented the same methods.
