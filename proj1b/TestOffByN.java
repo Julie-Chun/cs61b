@@ -2,8 +2,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TestOffByN {
-    static OffByN offBy5 = new OffByN(5);
-    static OffByN offBy10 = new OffByN(10);
+    static CharacterComparator offBy5 = new OffByN(5);
+    static CharacterComparator offBy10 = new OffByN(10);
 
     @Test
     public void testOffByN() {

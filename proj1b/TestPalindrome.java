@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 
 public class TestPalindrome {
     static Palindrome palindrome = new Palindrome();
-    static OffByOne obo = new OffByOne();
+    static CharacterComparator offByOne = new OffByOne();
 
     @Test
     public void testWordToDeque() {
@@ -79,22 +79,22 @@ public class TestPalindrome {
 
     @Test
     public void testIsPalindrome() {
-        assertTrue(palindrome.isPalindrome("", obo));
-        assertTrue(palindrome.isPalindrome("a", obo));
-        assertTrue(palindrome.isPalindrome("flake", obo));
-        assertFalse(palindrome.isPalindrome("flakf", obo));
-        assertTrue(palindrome.isPalindrome("&a%", obo));
-        assertTrue(palindrome.isPalindrome("AsB", obo));
-        assertTrue(palindrome.isPalindrome("C&B", obo));
-        assertFalse(palindrome.isPalindrome("AaA", obo));
-        assertFalse(palindrome.isPalindrome("abba", obo));
-        assertFalse(palindrome.isPalindrome("%b%", obo));
-        assertTrue(palindrome.isPalindrome("abb", obo));
-        assertTrue(palindrome.isPalindrome("%b&", obo));
-        assertFalse(palindrome.isPalindrome("#$&", obo));
-        assertFalse(palindrome.isPalindrome("aa", obo));
-        assertFalse(palindrome.isPalindrome("FF", obo));
-        assertFalse(palindrome.isPalindrome("AD", obo));
+        assertTrue(palindrome.isPalindrome("", offByOne));
+        assertTrue(palindrome.isPalindrome("a", offByOne));
+        assertTrue(palindrome.isPalindrome("flake", offByOne));
+        assertFalse(palindrome.isPalindrome("flakf", offByOne));
+        assertTrue(palindrome.isPalindrome("&a%", offByOne));
+        assertTrue(palindrome.isPalindrome("AsB", offByOne));
+        assertTrue(palindrome.isPalindrome("C&B", offByOne));
+        assertFalse(palindrome.isPalindrome("AaA", offByOne));
+        assertFalse(palindrome.isPalindrome("abba", offByOne));
+        assertFalse(palindrome.isPalindrome("%b%", offByOne));
+        assertTrue(palindrome.isPalindrome("abb", offByOne));
+        assertTrue(palindrome.isPalindrome("%b&", offByOne));
+        assertFalse(palindrome.isPalindrome("#$&", offByOne));
+        assertFalse(palindrome.isPalindrome("aa", offByOne));
+        assertFalse(palindrome.isPalindrome("FF", offByOne));
+        assertFalse(palindrome.isPalindrome("AD", offByOne));
 
     }
 }

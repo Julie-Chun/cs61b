@@ -4,19 +4,19 @@ import static org.junit.Assert.*;
  */
 
 public class TestOffByOne {
-    static CharacterComparator obo = new OffByOne();
+    static CharacterComparator offByOne = new OffByOne();
 
     @Test
     public void testOffByOne() {
-        assertTrue(obo.equalChars('&', '%'));
-        assertTrue(obo.equalChars('a', 'b'));
-        assertFalse(obo.equalChars('a', 'z'));
-        assertFalse(obo.equalChars('d', 'o'));
-        assertFalse(obo.equalChars('a', 'e'));
-        assertFalse(obo.equalChars('z', 'a'));
-        assertFalse(obo.equalChars('A', 'a'));
-        assertFalse(obo.equalChars('A', 'A'));
-        assertTrue(obo.equalChars('A', 'B'));
-        assertFalse(obo.equalChars('a', 'a'));
+        assertTrue(offByOne.equalChars('&', '%'));
+        assertTrue(offByOne.equalChars('a', 'b'));
+        assertFalse(offByOne.equalChars('a', 'z'));
+        assertFalse(offByOne.equalChars('d', 'o'));
+        assertFalse(offByOne.equalChars('a', 'e'));
+        assertFalse(offByOne.equalChars('z', 'a'));
+        assertFalse(offByOne.equalChars('A', 'a'));
+        assertFalse(offByOne.equalChars('A', 'A'));
+        assertTrue(offByOne.equalChars('A', 'B'));
+        assertFalse(offByOne.equalChars('a', 'a'));
     }
 }
