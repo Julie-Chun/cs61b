@@ -2,9 +2,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TestPalindrome {
-    // You must use this palindrome, and not instantiate
-    // new Palindromes, or the autograder might be upset.
     static Palindrome palindrome = new Palindrome();
+    static OffByOne obo = new OffByOne();
 
     @Test
     public void testWordToDeque() {
@@ -62,6 +61,8 @@ public class TestPalindrome {
     public void testisPalindrome() {
         assertTrue(palindrome.isPalindrome(""));
         assertTrue(palindrome.isPalindrome("a"));
+        assertFalse(palindrome.isPalindrome("Aa"));
+        assertTrue(palindrome.isPalindrome("AaA"));
         assertTrue(palindrome.isPalindrome("racecar"));
         assertTrue(palindrome.isPalindrome("noon"));
         assertFalse(palindrome.isPalindrome("horse"));
@@ -69,5 +70,29 @@ public class TestPalindrome {
         assertTrue(palindrome.isPalindrome("abba"));
         assertFalse(palindrome.isPalindrome("aaaaab"));
         assertFalse(palindrome.isPalindrome("rancor"));
+        assertTrue(palindrome.isPalindrome("$%%$"));
+        assertTrue(palindrome.isPalindrome("$m$"));
+        assertFalse(palindrome.isPalindrome("$mm&"));
+    }
+
+    @Test
+    public void testIsPalindrome() {
+        assertTrue(palindrome.isPalindrome("", obo));
+        assertTrue(palindrome.isPalindrome("a", obo));
+        assertTrue(palindrome.isPalindrome("flake", obo));
+        assertFalse(palindrome.isPalindrome("flakf", obo));
+        assertTrue(palindrome.isPalindrome("&a%", obo));
+        assertTrue(palindrome.isPalindrome("AsB", obo));
+        assertTrue(palindrome.isPalindrome("C&B", obo));
+        assertFalse(palindrome.isPalindrome("AaA", obo));
+        assertFalse(palindrome.isPalindrome("abba", obo));
+        assertFalse(palindrome.isPalindrome("%b%", obo));
+        assertTrue(palindrome.isPalindrome("abb", obo));
+        assertTrue(palindrome.isPalindrome("%b&", obo));
+        assertFalse(palindrome.isPalindrome("#$&", obo));
+        assertFalse(palindrome.isPalindrome("aa", obo));
+        assertFalse(palindrome.isPalindrome("FF", obo));
+        assertFalse(palindrome.isPalindrome("AD", obo));
+
     }
 }

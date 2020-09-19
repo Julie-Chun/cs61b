@@ -3,16 +3,22 @@
  * @author juliechun
  */
 
-public interface Deque <T> {
-    /** Adds an item to the front of the deque. */
+public interface Deque<T> {
+    /** Adds an item to the front of the deque.
+     * @param item is the item added to list.
+     * */
     public void addFirst(T item);
 
-    /** Adds an item to the end of the list
+    /** Adds an item to the end of the list.
+     * @param item is the item added to list.
+     * */
     public void addLast(T item);
 
-    /** Checks if Deque is empty. */
-    default public boolean isEmpty(){
-        if (size() == 0){
+    /** Checks if Deque is empty.
+     * @return true if the list is empty.
+     * */
+    default public boolean isEmpty() {
+        if (size() == 0) {
             return true;
         }
         return false;
