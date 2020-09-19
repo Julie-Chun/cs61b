@@ -3,7 +3,7 @@
  */
 public class OffByN implements CharacterComparator {
     /** creates a variable for the number off by. */
-    private int off;
+    public int off;
 
     /** takes int n as argument and saves it as an instance variable off.
      * @param n is the input of the number off by.
