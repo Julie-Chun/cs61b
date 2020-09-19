@@ -7,17 +7,17 @@ public interface Deque<T> {
     /** Adds an item to the front of the deque.
      * @param item is the item added to list.
      * */
-    public void addFirst(T item);
+    void addFirst(T item);
 
     /** Adds an item to the end of the list.
      * @param item is the item added to list.
      * */
-    public void addLast(T item);
+    void addLast(T item);
 
     /** Checks if Deque is empty.
      * @return true if the list is empty.
      * */
-    default public boolean isEmpty() {
+    default boolean isEmpty() {
         if (size() == 0) {
             return true;
         }
@@ -25,22 +25,22 @@ public interface Deque<T> {
     }
 
     /** Returns the size of the deque. */
-    public int size();
+    int size();
 
     /** Prints all the items inside the deque. */
-    public void printDeque();
+    void printDeque();
 
     /** Returns the first item of the deque of type T and
      * removes it from the deque. */
-    public T removeFirst();
+    T removeFirst();
 
     /** Returns the last item of the deque of type T and
      * removes it from the deque. */
-    public T removeLast();
+    T removeLast();
 
     /**
      * @param index of the deque is searched to
      * @return items in the deque.
      */
-    public T get(int index);
+    T get(int index);
 }

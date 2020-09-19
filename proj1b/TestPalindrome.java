@@ -55,6 +55,7 @@ public class TestPalindrome {
             a3 += d3.removeFirst();
         }
         assertEquals("aba", a3);
+
     }
 
     @Test
@@ -73,6 +74,7 @@ public class TestPalindrome {
         assertTrue(palindrome.isPalindrome("$%%$"));
         assertTrue(palindrome.isPalindrome("$m$"));
         assertFalse(palindrome.isPalindrome("$mm&"));
+        assertFalse(palindrome.isPalindrome(null));
     }
 
     @Test

@@ -10,7 +10,7 @@ public class Palindrome {
     public Deque<Character> wordToDeque(String word) {
         LinkedListDeque<Character> link = new LinkedListDeque<>();
         for (int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i); //charAt learned from beginnerbook.com.
+            char c = word.charAt(i);
             link.addLast(c);
         }
         return link;
@@ -20,19 +20,21 @@ public class Palindrome {
      * @param word is the input String.
      * */
     public boolean isPalindrome(String word) {
-        Deque<Character> deq = wordToDeque(word);
-        int len = word.length();
-
         if (word != null) {
+            Deque<Character> deq = wordToDeque(word);
+            int len = word.length();
+
             if (len <= 1 && len >= 0) {
                 return true;
             } else {
                 char first = deq.removeFirst();
                 char last = deq.removeLast();
+
                 if (last != first) {
                     return false;
                 }
-                return isPalindrome(word.substring(1, word.length() - 1)); //learned substring method from beginnerbook.com
+
+                return isPalindrome(word.substring(1, word.length() - 1));
             }
         }
         return false;
@@ -43,9 +45,6 @@ public class Palindrome {
      * @param word is the input String.
      * */
     public boolean isPalindrome(String word, CharacterComparator cc) {
-        Deque<Character> d = wordToDeque(word);
-        int len = word.length();
-
         if (word == null) {
             return false;
         }
@@ -53,6 +52,9 @@ public class Palindrome {
         if (cc == null) {
             return isPalindrome(word);
         }
+
+        Deque<Character> d = wordToDeque(word);
+        int len = word.length();
 
         if (len == 1 || len == 0) {
             return true;
@@ -62,7 +64,7 @@ public class Palindrome {
             if (!cc.equalChars(first, last)) {
                 return false;
             }
-            return isPalindrome(word.substring(1, word.length() - 1), cc); //learned substring method from beginnerbook.com
+            return isPalindrome(word.substring(1, word.length() - 1), cc);
         }
     }
 
