@@ -22,7 +22,22 @@ public class TimeAList {
     }
 
     public static void timeAListConstruction() {
-        // TODO: YOUR CODE HERE
+        int[] Ns = new int[] {1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 10000000};
+        ArrayList<Integer> list =  new ArrayList<>();
+        ArrayList<Double> time =  new ArrayList<>();
+
+        for (int i = 0; i < Ns.length; i++) {
+            Stopwatch sw = new Stopwatch();
+            AList<Integer> testing = new AList<>();
+            for (int k = 0; k < Ns[i]; k++) {
+                testing.addLast(k);
+            }
+            double timeInSeconds = sw.elapsedTime();
+            list.add(testing.size());
+            time.add(timeInSeconds);
+        }
+
+        printTimingTable(list, time, list);
     }
 
 
