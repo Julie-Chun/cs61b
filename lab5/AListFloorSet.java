@@ -9,17 +9,11 @@ public class AListFloorSet implements Lab5FloorSet {
     }
 
     public void add(double x) {
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i) != x) {
-                items.addLast(x);
-            }
-        }
-        return;
+        items.addLast(x);
     }
 
     public double floor(double x) {
         double largest = -99999.9;
-        boolean negInf = false;
 
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i) <= x && items.get(i) > largest) {

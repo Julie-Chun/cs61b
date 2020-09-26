@@ -7,6 +7,19 @@ import static org.junit.Assert.assertEquals;
 public class TestRedBlackFloorSet {
     @Test
     public void randomizedTest() {
-       // TODO: YOUR CODE HERE
+        AListFloorSet aLFS = new AListFloorSet();
+        RedBlackFloorSet rBFSF = new RedBlackFloorSet();
+
+        for (int i = 0; i < 1000000; i++) {
+            double random = StdRandom.uniform(-5000.0, 5000.0);
+            aLFS.add(random);
+            rBFSF.add(random);
+        }
+
+        for (int i = 0; i < 100000; i++) {
+            double random = StdRandom.uniform(-5000.0, 5000.0);
+            assertEquals(aLFS.floor(random), rBFSF.floor(random), 0.000001);
+        }
+
     }
 }
