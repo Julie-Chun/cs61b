@@ -43,8 +43,6 @@ public class UnionFind {
        vertex with itself or vertices that are already connected should not 
        change the sets but may alter the internal structure of the data. */
     public void connect(int v1, int v2) {
-        validate(v1);
-        validate(v2);
         if (find(v1) != find(v2)) {
             if (sizeOf(v1) > sizeOf(v2)) {
                 parent[find(v1)] += parent[find(v2)];
@@ -59,7 +57,9 @@ public class UnionFind {
     /* Returns the root of the set v1 belongs to. Path-compression is employed
        allowing for fast search-time. */
     public int find(int v1) {
+        /*
         validate(v1);
+
         if (parent(v1) < 0) {
             return parent(v1);
         } else {
@@ -77,7 +77,9 @@ public class UnionFind {
 
             return root;
         }
-        /*
+        */
+
+
 
         validate(v1);
         if (parent(v1) < 0) {
@@ -86,7 +88,7 @@ public class UnionFind {
         parent[v1] = find(parent[v1]);
         return parent[v1];
 
-         */
+         
     }
 
 }
