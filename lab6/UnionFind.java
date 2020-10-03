@@ -51,6 +51,8 @@ public class UnionFind {
                 parent[find(v2)] += parent[find(v1)];
                 parent[find(v1)] = find(v2);
             }
+        } else if (v1 == v2 && v2 == -1) {
+            parent[v1] = v2;
         }
     }
 
@@ -88,7 +90,7 @@ public class UnionFind {
         parent[v1] = find(parent[v1]);
         return parent[v1];
 
-         
+
     }
 
 }
