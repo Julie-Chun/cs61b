@@ -15,7 +15,7 @@ public class UnionFind {
 
     /* Throws an exception if v1 is not a valid vertex. */
     private void validate(int v1) {
-        if (v1 < 0 || v1 >= parent.length) {
+        if (v1 >= parent.length) {
             throw new IllegalArgumentException("This vertex is not valid.");
         }
     }
@@ -51,7 +51,8 @@ public class UnionFind {
                 parent[find(v2)] += parent[find(v1)];
                 parent[find(v1)] = find(v2);
             }
-        } else if (v1 == v2 && v2 == -1) {
+        } else if (parent[v1] == parent[v2] && parent[v2] == -1) {
+            parent[v2] += parent[v1];
             parent[v1] = v2;
         }
     }
@@ -84,11 +85,12 @@ public class UnionFind {
 
 
         validate(v1);
-        if (parent(v1) < 0) {
-            return parent(v1);
+        if (parent[v1] < 0) {
+            return v1;
+        } else {
+            return find(parent[v1]);
         }
-        parent[v1] = find(parent[v1]);
-        return parent[v1];
+
 
 
     }
