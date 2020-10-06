@@ -27,7 +27,7 @@ public class Percolation {
         size = N;
         grid = new int[N][N];
         openSpots = new boolean[N][N];
-        tree = new WeightedQuickUnionUF((size * size)+ 2);
+        tree = new WeightedQuickUnionUF((size * size) + 2);
 
         for (int r = 0; r < N; r++) {
             for (int c = 0; c < N; c++) {
@@ -101,7 +101,8 @@ public class Percolation {
         boolean connect = false;
         for (int i = 0; i < size; i++) {
             int lastRow = i + ((size - 1) * size);
-            connect = connect || ( tree.connected((size * size) + 1, lastRow) && isFull(size - 1, i));
+            boolean rooted = tree.connected((size * size) + 1, lastRow);
+            connect = connect || (rooted && isFull(size - 1, i));
         }
         return connect;
     }
@@ -109,8 +110,8 @@ public class Percolation {
     /* For unit testing (not required, but keep this here for the autograder). */
     public static void main(String[] args) {
         Percolation per = new Percolation(4);
-        boolean one = per.isFull(0,0);
-        boolean two = per.isOpen(3,3);
+        boolean one = per.isFull(0, 0);
+        boolean two = per.isOpen(3, 3);
         boolean three = per.percolates();
         int num0 = per.numberOfOpenSites();
         boolean a = per.isFull(0, 0); // false
