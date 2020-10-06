@@ -9,10 +9,11 @@ public class PercolationStats {
         if (N <= 0 || T <= 0) {
             throw new java.lang.IllegalArgumentException();
         }
-        Percolation p = pf.make(N);
+
         frac = new double[T];
 
         for (int i = 0; i < T; i++) {
+            Percolation p = pf.make(N);
             while (!p.percolates()) {
                 int r = edu.princeton.cs.introcs.StdRandom.uniform(N);
                 int c = edu.princeton.cs.introcs.StdRandom.uniform(N);

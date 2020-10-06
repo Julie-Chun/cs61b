@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     /* the grid. */
-    int[][] grid;
+    private int[][] grid;
 
     /* size of square grid. */
     private int size;
@@ -13,31 +13,29 @@ public class Percolation {
     private int numOpen;
 
     /* keeps records of openess. */
-    boolean[][] openSpots;
+    private boolean[][] openSpots;
 
     /* virtual sites.*/
     private WeightedQuickUnionUF tree;
 
     /* creates a N-by-N grid, with all sites initially blocked. */
     public Percolation(int N) {
+        if (N <= 0) {
+            throw new java.lang.IllegalArgumentException();
+        }
+
         size = N;
         grid = new int[N][N];
         openSpots = new boolean[N][N];
-        tree = new WeightedQuickUnionUF(size + 999);
+        tree = new WeightedQuickUnionUF(size + 2);
 
         for (int r = 0; r < N; r++) {
             for (int c = 0; c < N; c++) {
                 grid[r][c] = c + (r * size);
                 openSpots[r][c] = false;
                 if (r == 0) {
-                    tree.union(size + 990, grid[r][c]);
+                    tree.union(size + 1, grid[r][c]);
                 }
-                /*
-                if (r == size - 1) {
-                    tree.union(grid[r][c], size + 998);
-                }
-
-                 */
             }
         }
     }
@@ -49,8 +47,10 @@ public class Percolation {
         } else if (col < 0 || col > size - 1) {
             throw new java.lang.IndexOutOfBoundsException();
         } else {
-            numOpen++;
-            openSpots[row][col] = true;
+            if (!openSpots[row][col]) {
+                numOpen++;
+                openSpots[row][col] = true;
+            }
 
             if (row - 1  >= 0 && openSpots[row - 1][col]) {
                 tree.union(grid[row][col], grid[row - 1][col]);
@@ -88,7 +88,7 @@ public class Percolation {
             throw new java.lang.IndexOutOfBoundsException("column is out of bounds.");
         }
 
-        return tree.connected(size + 990, grid[row][col]) && isOpen(row, col);
+        return tree.connected(size + 1, grid[row][col]) && isOpen(row, col);
     }
 
     /* returns the number of open sites. */
@@ -101,7 +101,7 @@ public class Percolation {
         boolean connect = false;
         for (int i = 0; i < size; i++) {
             int lastRow = i + ((size - 1) * size);
-            connect = connect || tree.connected(size + 990, lastRow);
+            connect = connect || ( tree.connected(size + 1, lastRow) && isFull(size - 1, i));
         }
         return connect;
     }
