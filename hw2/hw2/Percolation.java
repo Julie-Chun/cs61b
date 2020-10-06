@@ -102,18 +102,15 @@ public class Percolation {
     }
 
     /* checks if any column of the last row is filled and rooted. */
-    private boolean lastFilled(int x, int r, int c) {
+    private boolean lastFilled(int rt, int r, int c) {
         if (c >= size) {
             return false;
+        } else if (tree.connected(rt, c + (r * size)) && isFull(r, c)) {
+            return true;
+        } else {
+            c = c + 1;
+            return lastFilled(rt, r, c);
         }
-
-        if (tree.connected(x, c + (r * size))) {
-            if (isFull(r, c)) {
-                return true;
-            }
-        }
-
-        return lastFilled(x, r, c++);
     }
 
     /* For unit testing (not required, but keep this here for the autograder). */
