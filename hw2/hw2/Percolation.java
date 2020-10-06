@@ -98,6 +98,11 @@ public class Percolation {
 
     /* checks if the system percolates. */
     public boolean percolates() {
+        return lastFilled();
+    }
+
+    /* checks if any column of the last row is filled and rooted. */
+    private boolean lastFilled() {
         boolean connect = false;
         for (int i = 0; i < size; i++) {
             int lastRow = i + ((size - 1) * size);
