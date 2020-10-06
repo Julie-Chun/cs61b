@@ -98,23 +98,28 @@ public class Percolation {
 
     /* checks if the system percolates. */
     public boolean percolates() {
-        return lastFilled();
+        return lastFilled((size * size) + 1, size - 1, 0);
     }
 
     /* checks if any column of the last row is filled and rooted. */
-    private boolean lastFilled() {
-        boolean connect = false;
-        for (int i = 0; i < size; i++) {
-            int lastRow = i + ((size - 1) * size);
-            boolean rooted = tree.connected((size * size) + 1, lastRow);
-            connect = connect || (rooted && isFull(size - 1, i));
+    private boolean lastFilled(int x, int r, int c) {
+        if (c >= size) {
+            return false;
         }
-        return connect;
+
+        if (tree.connected(x, c + (r * size))) {
+            if (isFull(r, c)) {
+                return true;
+            }
+        }
+
+        return lastFilled(x, r, c++);
     }
 
     /* For unit testing (not required, but keep this here for the autograder). */
     public static void main(String[] args) {
         Percolation per = new Percolation(4);
+
         boolean one = per.isFull(0, 0);
         boolean two = per.isOpen(3, 3);
         boolean three = per.percolates();
