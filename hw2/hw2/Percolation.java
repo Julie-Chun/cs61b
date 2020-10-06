@@ -27,14 +27,14 @@ public class Percolation {
         size = N;
         grid = new int[N][N];
         openSpots = new boolean[N][N];
-        tree = new WeightedQuickUnionUF(size + 2);
+        tree = new WeightedQuickUnionUF((size * size)+ 2);
 
         for (int r = 0; r < N; r++) {
             for (int c = 0; c < N; c++) {
                 grid[r][c] = c + (r * size);
                 openSpots[r][c] = false;
                 if (r == 0) {
-                    tree.union(size + 1, grid[r][c]);
+                    tree.union((size * size) + 1, grid[r][c]);
                 }
             }
         }
@@ -88,7 +88,7 @@ public class Percolation {
             throw new java.lang.IndexOutOfBoundsException("column is out of bounds.");
         }
 
-        return tree.connected(size + 1, grid[row][col]) && isOpen(row, col);
+        return tree.connected((size * size) + 1, grid[row][col]) && isOpen(row, col);
     }
 
     /* returns the number of open sites. */
@@ -101,7 +101,7 @@ public class Percolation {
         boolean connect = false;
         for (int i = 0; i < size; i++) {
             int lastRow = i + ((size - 1) * size);
-            connect = connect || ( tree.connected(size + 1, lastRow) && isFull(size - 1, i));
+            connect = connect || ( tree.connected((size * size) + 1, lastRow) && isFull(size - 1, i));
         }
         return connect;
     }
@@ -109,6 +109,9 @@ public class Percolation {
     /* For unit testing (not required, but keep this here for the autograder). */
     public static void main(String[] args) {
         Percolation per = new Percolation(4);
+        boolean one = per.isFull(0,0);
+        boolean two = per.isOpen(3,3);
+        boolean three = per.percolates();
         int num0 = per.numberOfOpenSites();
         boolean a = per.isFull(0, 0); // false
         per.open(0, 0);
