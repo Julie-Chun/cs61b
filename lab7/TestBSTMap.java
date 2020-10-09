@@ -21,9 +21,9 @@ public class TestBSTMap {
     public void sanityClearTest() {
     	BSTMap<String, Integer> b = new BSTMap<String, Integer>();
         for (int i = 0; i < 455; i++) {
-            b.put("hi" + i, 1+i);
+            b.put("hi" + i, 1 + i);
             //make sure put is working via containsKey and get
-            assertTrue( null != b.get("hi" + i) && (b.get("hi"+i).equals(1+i))
+            assertTrue(null != b.get("hi" + i) && (b.get("hi" + i).equals(1 + i))
                         && b.containsKey("hi" + i));
         }
         assertEquals(455, b.size());
@@ -47,13 +47,13 @@ public class TestBSTMap {
     @Test
     public void sanityGetTest() {
     	BSTMap<String, Integer> b = new BSTMap<String, Integer>();
-        assertEquals(null,b.get("starChild"));
+        assertEquals(null, b.get("starChild"));
         assertEquals(0, b.size());
         b.put("starChild", 5);
         assertTrue(((Integer) b.get("starChild")).equals(5));
         b.put("KISS", 5);
         assertTrue(((Integer) b.get("KISS")).equals(5));
-        assertNotEquals(null,b.get("starChild"));
+        assertNotEquals(null, b.get("starChild"));
         assertEquals(2, b.size());
     }
 
@@ -64,8 +64,9 @@ public class TestBSTMap {
         assertEquals(0, b.size());
         b.put("hi", 1);
         assertEquals(1, b.size());
-        for (int i = 0; i < 455; i++)
+        for (int i = 0; i < 455; i++) {
             b.put("hi" + i, 1);
+        }
         assertEquals(456, b.size());
     }
 
