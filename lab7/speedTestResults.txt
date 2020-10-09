@@ -1,0 +1,64 @@
+Random Speed Tests:
+	Please enter desired length of each string: 5
+	
+	Try 1:
+		Enter # strings to insert into the maps: 10
+
+		class ULLMap: 0.00 sec
+		class BSTMap: 0.00 sec
+		Java's Built-in TreeMap: 0.00 sec
+
+	Try 2: 
+		Enter # strings to insert into the maps: 1000
+
+		class ULLMap: 0.01 sec
+		class BSTMap: 0.01 sec
+		Java's Built-in TreeMap: 0.00 sec
+
+	Try 3:
+		Enter # strings to insert into the maps: 20000
+		
+		class ULLMap: 1.21 sec
+		class BSTMap: 0.03 sec
+		Java's Built-in TreeMap: 0.01 sec
+
+	Try 4:
+		Enter # strings to insert into the maps: 1000000
+		
+		--Stack Overflow -- couldn't add 1000000 strings of length 5.
+		class BSTMap: 1.40 sec
+		Java's Built-in TreeMap: 0.97 sec
+
+
+In Order Speed Tests:
+	Try 1:
+		Enter # strings to insert into the maps: 10
+
+		class ULLMap: 0.00 sec
+		class BSTMap: 0.00 sec
+		Java's Built-in TreeMap: 0.00 sec
+		Java's Built-in HashMap: 0.00 sec
+
+	Try 2:
+		Enter # strings to insert into the maps: 1000
+
+		class ULLMap: 0.03 sec
+		class BSTMap: 0.03 sec
+		Java's Built-in TreeMap: 0.00 sec
+		Java's Built-in HashMap: 0.00 sec
+
+	Try 3:
+		Enter # strings to insert into the maps: 20000
+
+		class ULLMap: 5.41 sec
+		--Stack Overflow -- couldn't add 20000 strings.
+		Java's Built-in TreeMap: 0.01 sec
+		Java's Built-in HashMap: 0.01 sec
+
+	Try 4:
+		Enter # strings to insert into the maps: 1000000
+
+		--Stack Overflow -- couldn't add 1000000 strings.
+		--Stack Overflow -- couldn't add 1000000 strings.
+		Java's Built-in TreeMap: 0.78 sec
+		Java's Built-in HashMap: 0.71 sec
