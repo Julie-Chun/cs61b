@@ -79,7 +79,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     /* gets the floorMod of the Hashcode of keys. */
-    public int modHash(K k, int bucketL) {
+    private int modHash(K k, int bucketL) {
         int num = Math.floorMod(k.hashCode(), bucketL);
         return num;
     }
@@ -167,7 +167,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     /* Returns an Iterator that iterates over the stored keys. */
     @Override
-    public Iterator iterator() {
+    public Iterator<K> iterator() {
         return keySet.iterator();
     }
+
 }
