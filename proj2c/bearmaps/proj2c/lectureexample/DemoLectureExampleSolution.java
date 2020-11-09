@@ -1,8 +1,6 @@
 package bearmaps.proj2c.lectureexample;
 
 import bearmaps.proj2c.AStarSolver;
-import bearmaps.proj2c.LazySolver;
-import bearmaps.proj2c.ShortestPathsSolver;
 import bearmaps.proj2c.SolutionPrinter;
 
 /**

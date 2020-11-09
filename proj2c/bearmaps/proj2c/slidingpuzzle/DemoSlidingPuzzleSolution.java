@@ -1,8 +1,6 @@
 package bearmaps.proj2c.slidingpuzzle;
 
 import bearmaps.proj2c.AStarSolver;
-import bearmaps.proj2c.LazySolver;
-import bearmaps.proj2c.ShortestPathsSolver;
 import bearmaps.proj2c.SolutionPrinter;
 
 /**
@@ -20,7 +18,7 @@ public class DemoSlidingPuzzleSolution {
 
         BoardGraph spg = new BoardGraph();
 
-        ShortestPathsSolver<Board> solver = new LazySolver<>(spg, start, goal, 20);
+        AStarSolver<Board> solver = new AStarSolver<>(spg, start, goal, 20);
         SolutionPrinter.summarizeSolution(solver, "\n");
     }
 }

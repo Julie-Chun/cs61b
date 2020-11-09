@@ -15,6 +15,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
     private DoubleMapPQ<Vertex> queue;
     private HashMap<Vertex, Double> distTo;
+    private HashMap<Vertex, Vertex> edgeTo;
     private int statesVisited;
     private AStarGraph<Vertex> graph;
 
@@ -34,6 +35,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         graph = input;
         distTo = new HashMap<>();
+        edgeTo = new HashMap<>();
         statesVisited = 0;
         solutionWeight = 0;
         solution = new ArrayList<>();
@@ -41,34 +43,42 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         queue.add(start, 0.0);
         distTo.put(start, 0.0);
+        edgeTo.put(start, start);
 
         Stopwatch sw = new Stopwatch();
         timeSpent = sw.elapsedTime();
-        while (queue.size() > 0 /*&& timeSpent < timeout*/) {
-            Vertex smallest = queue.getSmallest();
+        while (queue.size() > 0 && timeSpent < timeout) {
+            Vertex smallest = queue.removeSmallest();
             statesVisited += 1;
             relax(smallest, end);
-            solutionWeight = distTo.get(smallest);
-            solution.add(smallest);
+
             if (smallest.equals(end)) {
+                Vertex from = edgeTo.get(smallest);
+                Vertex to = smallest;
+
+                while (!from.equals(to)) {
+                    solution.add(0, to);
+                    to = from;
+                    from = edgeTo.get(to);
+                }
+
+                solution.add(0, to);
+                solutionWeight = distTo.get(smallest);
                 outcome = SolverOutcome.SOLVED;
                 return;
             }
 
-            /*
             if (timeSpent > timeout) {
                 outcome = SolverOutcome.TIMEOUT;
-                solution = new ArrayList<>();
                 solutionWeight = 0;
                 return;
-            }*/
+            }
 
             timeSpent = sw.elapsedTime();
         }
 
         outcome = SolverOutcome.UNSOLVABLE;
         solutionWeight = 0;
-        solution = new ArrayList<>();
         return;
 
     }
@@ -84,17 +94,22 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
             Vertex child = we.to();
             double weight = we.weight();
 
-            if (!distTo.containsKey(child)){
+            if (!distTo.containsKey(child)) {
                 distTo.put(child, Double.POSITIVE_INFINITY);
+            }
+            if (!edgeTo.containsKey(child)) {
+                edgeTo.put(child, parent);
             }
 
             if (distTo.get(parent) + weight < distTo.get(child)) {
                 distTo.replace(child, distTo.get(parent) + weight);
+                edgeTo.replace(child, parent);
+                double hueristic = graph.estimatedDistanceToGoal(child, goal);
 
                 if (queue.contains(child)) {
-                    queue.changePriority(child, distTo.get(child) + graph.estimatedDistanceToGoal(child, goal));
+                    queue.changePriority(child, distTo.get(child) + hueristic);
                 } else if (!queue.contains(child)) {
-                    queue.add(child, distTo.get(child) + graph.estimatedDistanceToGoal(child, goal));
+                    queue.add(child, distTo.get(child) + hueristic);
                 }
 
             }
