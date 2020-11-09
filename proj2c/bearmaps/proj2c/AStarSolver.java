@@ -12,11 +12,10 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private double solutionWeight;
     private List<Vertex> solution;
     private double timeSpent;
+
     private DoubleMapPQ<Vertex> queue;
     private HashMap<Vertex, Double> distTo;
-    private HashMap<Vertex, Double> hueristic;
     private int statesVisited;
-    private double inf;
     private AStarGraph<Vertex> graph;
 
 
@@ -35,136 +34,73 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         graph = input;
         distTo = new HashMap<>();
-        hueristic = new HashMap<>();
         statesVisited = 0;
         solutionWeight = 0;
         solution = new ArrayList<>();
-        inf = Double.POSITIVE_INFINITY;
         queue = new DoubleMapPQ<>();
 
-        setUpMaps(start, end);
-        //setUpPQ(start, end);
         queue.add(start, 0.0);
-        distTo.replace(start, 0.0);
+        distTo.put(start, 0.0);
 
-        Vertex ver = queue.getSmallest();
         Stopwatch sw = new Stopwatch();
         timeSpent = sw.elapsedTime();
         while (queue.size() > 0 /*&& timeSpent < timeout*/) {
-            Vertex smallest = queue.removeSmallest();
+            Vertex smallest = queue.getSmallest();
             statesVisited += 1;
-            relax(smallest);
+            relax(smallest, end);
             solutionWeight = distTo.get(smallest);
             solution.add(smallest);
-
-            if (ver.equals(end)) {
+            if (smallest.equals(end)) {
                 outcome = SolverOutcome.SOLVED;
                 return;
             }
-            if (queue.size() == 0) {
-                outcome = SolverOutcome.UNSOLVABLE;
-                solutionWeight = 0;
-                solution = new ArrayList<>();
-                return;
-            }
 
+            /*
             if (timeSpent > timeout) {
                 outcome = SolverOutcome.TIMEOUT;
                 solution = new ArrayList<>();
                 solutionWeight = 0;
                 return;
-            }
+            }*/
 
-
-            ver = queue.getSmallest();
             timeSpent = sw.elapsedTime();
         }
 
+        outcome = SolverOutcome.UNSOLVABLE;
+        solutionWeight = 0;
+        solution = new ArrayList<>();
+        return;
 
     }
 
     /**
      * relax all edges going out from the source vertex in StartGraph input.
      */
-    private void relax(Vertex e, AStarGraph<Vertex> input) {
-        List<WeightedEdge<Vertex>> n = input.neighbors(e);
+    private void relax(Vertex e, Vertex goal) {
+        List<WeightedEdge<Vertex>> n = graph.neighbors(e);
 
         for (WeightedEdge<Vertex> we : n) {
             Vertex parent = we.from();
             Vertex child = we.to();
             double weight = we.weight();
 
+            if (!distTo.containsKey(child)){
+                distTo.put(child, Double.POSITIVE_INFINITY);
+            }
+
             if (distTo.get(parent) + weight < distTo.get(child)) {
                 distTo.replace(child, distTo.get(parent) + weight);
 
                 if (queue.contains(child)) {
-                    queue.changePriority(child, distTo.get(child) + hueristic.get(child));
+                    queue.changePriority(child, distTo.get(child) + graph.estimatedDistanceToGoal(child, goal));
                 } else if (!queue.contains(child)) {
-                    queue.add(child, distTo.get(child) + hueristic.get(child));
+                    queue.add(child, distTo.get(child) + graph.estimatedDistanceToGoal(child, goal));
                 }
 
             }
         }
 
     }
-
-    /**
-     * relax all edges going out from the source vertex e.
-     */
-    private void relax(Vertex e) {
-        relax(e, graph);
-    }
-
-    /**
-     * set up initial distTo and hueristic Maps.
-     */
-    private void setUpMaps(Vertex s, Vertex g) {
-        if (!distTo.containsKey(s)) {
-            distTo.put(s, inf);
-            hueristic.put(s, graph.estimatedDistanceToGoal(s, g));
-            setUpMaps(s, g);
-        } else if (distTo.containsKey(s)) {
-            return;
-        }
-
-        List<WeightedEdge<Vertex>> n = this.graph.neighbors(s);
-
-        for (WeightedEdge<Vertex> we : n) {
-            Vertex v = we.to();
-            setUpMaps(v, g);
-        }
-
-        return;
-    }
-
-    /**
-     * set up initial priority queue.
-     */
-    private void setUpPQ(Vertex start, Vertex end) {
-        if (start.equals(end)) {
-            if (!queue.contains(start)) {
-                queue.add(start, 0.0);
-            }
-            return;
-        }
-
-        List<WeightedEdge<Vertex>> n = graph.neighbors(start);
-
-        for (WeightedEdge<Vertex> edge : n) {
-            Vertex parent = edge.from();
-            Vertex child = edge.to();
-            double weight = edge.weight() + hueristic.get(parent);
-
-            if (!queue.contains(parent)) {
-                queue.add(parent, weight);
-            }
-
-            setUpPQ(child, end);
-        }
-
-        return;
-    }
-
 
     /**
      * @source project 2c spec for the following comment.
