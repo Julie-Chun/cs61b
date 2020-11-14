@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bearmaps.proj2d.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2d.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2d.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -84,9 +83,85 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
+        double lrlon = requestParams.get("lrlon");
+        double ullon = requestParams.get("ullon");
+        double w = requestParams.get("w");
+        double h = requestParams.get("h");
+        double ullat = requestParams.get("ullat");
+        double lrlat = requestParams.get("lrlat");
+        double londdpp = (lrlon - ullon) / w;
+
+        double tile_ullat = ROOT_ULLAT;
+        double tile_lrlon = ROOT_LRLON;
+        double tile_londpp = (tile_lrlon - tile_ullat) / TILE_SIZE;
+
+        int depth = 0;
+
+        boolean query_success = false;
+        if (ROOT_ULLAT >= ullat || ROOT_LRLAT >= lrlat || ROOT_LRLON <= lrlon || ROOT_ULLON <= ullon) {
+            if (ROOT_ULLAT < ullat) {
+                ullat = ROOT_ULLAT;
+            }
+            if (ROOT_LRLAT < lrlat) {
+                lrlat = ROOT_LRLAT;
+            }
+            if (ROOT_LRLON > lrlon) {
+                lrlon = ROOT_LRLON;
+            }
+            if (ROOT_ULLON > ullon) {
+                ullon = ROOT_ULLON;
+            }
+
+            if (lrlon >= ullon && ullat >= lrlat) {
+                query_success = true;
+            }
+
+        }
+
+        while (londdpp < tile_londpp) {
+            depth += 1;
+            tile_ullat = tile_ullat / 2;
+            tile_lrlon = tile_lrlon / 2;
+            tile_londpp = (ROOT_LRLON - ROOT_ULLAT) / TILE_SIZE;
+        }
+
+        String[][] render_grid = new String[(int)Math.pow(2, depth)][(int)Math.pow(2, depth)];
+
+        double tile_width = Math.abs(ROOT_LRLON - ROOT_LRLON) / Math.pow(2, depth);
+        double tile_height = Math.abs(ROOT_LRLAT - ROOT_LRLAT) / Math.pow(2, depth);
+
+
+
+
+        int x2 = (int) (Math.abs(ROOT_ULLON - lrlon) / tile_width);
+        int x1 = (int) (Math.abs(ROOT_ULLON - ullon) / tile_width);
+        int y2 = (int) (Math.abs(ROOT_ULLAT - lrlat) / tile_height);
+        int y1 = (int) (Math.abs(ROOT_ULLAT - ullat) / tile_height);
+
+        int row = 0;
+        int col = 0;
+        for (int r = y1; r <= y2; r++) {
+            for (int c = x1; c <= x2; c++) {
+                render_grid[row][col] = "d" + depth + "_x" + c + "_y" + r;
+                col += 1;
+            }
+            row += 1;
+        }
+
+        double raster_ul_lon = ROOT_ULLON + (x1 * tile_width);
+        double raster_ul_lat = ROOT_ULLAT + (y1 * tile_height);
+        double raster_lr_lon = ROOT_LRLON + (x2 * tile_width);
+        double raster_lr_lat = ROOT_LRLAT + (y2 * tile_height);
+
+        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+        System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
+        results.put("depth", depth);
+        results.put("render_grid", render_grid);
+        results.put("raster_ul_lon", raster_ul_lon);
+        results.put("raster_ul_lat", raster_ul_lat);
+        results.put("raster_lr_lon", raster_lr_lon);
+        results.put("raster_lr_lat", raster_lr_lat);
         System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
                 + "your browser.");
         return results;
@@ -143,7 +218,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      * In Spring 2016, students had to do this on their own, but in 2017,
      * we made this into provided code since it was just a bit too low level.
      */
-    private  void writeImagesToOutputStream(Map<String, Object> rasteredImageParams,
+    private void writeImagesToOutputStream(Map<String, Object> rasteredImageParams,
                                                   ByteArrayOutputStream os) {
         String[][] renderGrid = (String[][]) rasteredImageParams.get("render_grid");
         int numVertTiles = renderGrid.length;
