@@ -18,6 +18,12 @@ import java.awt.Color;
 
 public class Tileset {
     public static final TETile AVATAR = new TETile('@', Color.white, Color.black, "you");
+    public static final TETile SMILE = new TETile('☻', Color.yellow, Color.black, "you");
+    public static final TETile COVER = new TETile('☂', Color.cyan, Color.black, "you");
+    public static final TETile MUSIC = new TETile('♫', Color.pink, Color.black, "you");
+    public static final TETile SUN = new TETile('☀', Color.orange, Color.black, "you");
+    public static final TETile STAR = new TETile('⭑', Color.yellow, Color.black, "you");
+    public static final TETile HEART = new TETile('❤', Color.red, Color.black, "you");
     public static final TETile WALL = new TETile('#', new Color(216, 128, 128), Color.darkGray,
             "wall");
     public static final TETile FLOOR = new TETile('·', new Color(128, 192, 128), Color.black,
@@ -34,5 +40,3 @@ public class Tileset {
     public static final TETile MOUNTAIN = new TETile('▲', Color.gray, Color.black, "mountain");
     public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree");
 }
-
-
