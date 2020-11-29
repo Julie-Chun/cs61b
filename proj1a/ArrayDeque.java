@@ -42,6 +42,7 @@ public class ArrayDeque<T> {
             resizeUp();
         }
     }
+
     /** adds @param item to the end of the list. */
     public void addLast(T item) {
         items[nextLast] = item;
@@ -67,11 +68,14 @@ public class ArrayDeque<T> {
         }
 
         T[] holder = (T[]) new Object[size * 2];
-        System.arraycopy(items, first, holder, 0, items.length - first);
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] != null) {
+                holder[i] = items[i];
+            }
+        }
+        //System.arraycopy(items, first, holder, 0, items.length - first);
 
         items = holder;
-        nextFirst = items.length - 1;
-        nextLast = size;
     }
 
     /** rescales the list so that its usage factor is more
@@ -79,11 +83,24 @@ public class ArrayDeque<T> {
     private void resizeDown() {
         int first = nextFirst + 1;
 
-        T[] holder = (T[]) new Object[items.length / 2];
+        if (nextFirst >= items.length) {
+            first = 0;
+        }
 
+        T[] holder = (T[]) new Object[items.length / 2];
+        int i = 0;
+        for (T it : items) {
+            if (it != null) {
+                holder[i] = it;
+                i += 1;
+            }
+        }
+/*
         if (nextLast != 0) {
             System.arraycopy(items, 0, holder, items.length - first, nextLast);
         }
+        
+ */
 
         items = holder;
         nextFirst = items.length - 1;
