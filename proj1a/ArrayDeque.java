@@ -39,13 +39,13 @@ public class ArrayDeque<T> {
         }
 
         if (size >= items.length) {
-            resize();
+            resizeUp();
         }
 
         if (items.length > 15) {
             double usageFactor = (double) size / (double) items.length;
             if (usageFactor < 0.25) {
-                resize();
+                resizeDown();
             }
         }
     }
@@ -60,20 +60,20 @@ public class ArrayDeque<T> {
         }
 
         if (size >= items.length) {
-            resize();
+            resizeUp();
         }
 
         if (items.length > 15) {
             double usageFactor = (double) size / (double) items.length;
             if (usageFactor < 0.25) {
-                resize();
+                resizeDown();
             }
         }
     }
 
     /** rescales the list so that its usage factor is more
      * than 25% and the nextFront and nextLast has a space in the list. */
-    private void resize() {
+    private void resizeUp() {
         int first = nextFirst + 1;
 
         if (nextFirst >= items.length) {
@@ -83,15 +83,27 @@ public class ArrayDeque<T> {
         T[] holder = (T[]) new Object[size * 2];
         System.arraycopy(items, first, holder, 0, items.length - first);
 
-        if (nextLast != 0) {
-            System.arraycopy(items, 0, holder, items.length - first, nextLast);
-        }
         items = holder;
         nextFirst = items.length - 1;
         nextLast = size;
-
-
     }
+
+    /** rescales the list so that its usage factor is more
+     * than 25% and the nextFront and nextLast has a space in the list. */
+    private void resizeDown() {
+        int first = nextFirst + 1;
+
+        T[] holder = (T[]) new Object[size / 2];
+
+        if (nextLast != 0) {
+            System.arraycopy(items, 0, holder, items.length - first, nextLast);
+        }
+
+        items = holder;
+        nextFirst = items.length - 1;
+        nextLast = size;
+    }
+
     /** @return true if the array list is empty. */
     public boolean isEmpty() {
         for (int i = 0; i < items.length; i++) {
@@ -154,13 +166,13 @@ public class ArrayDeque<T> {
             size--;
 
             if (size >= items.length) {
-                resize();
+                resizeUp();
             }
 
             if (items.length > 15) {
                 double usageFactor = (double) size / (double) items.length;
                 if (usageFactor < 0.25) {
-                    resize();
+                    resizeDown();
                 }
             }
 
@@ -190,13 +202,13 @@ public class ArrayDeque<T> {
             size--;
 
             if (size >= items.length) {
-                resize();
+                resizeUp();
             }
 
             if (items.length > 15) {
                 double usageFactor = (double) size / (double) items.length;
                 if (usageFactor < 0.25) {
-                    resize();
+                    resizeDown();
                 }
             }
 
