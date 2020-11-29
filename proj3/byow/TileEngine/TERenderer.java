@@ -12,7 +12,7 @@ import java.awt.Font;
  * allowing scrolling of the screen or tracking the avatar or something similar.
  */
 public class TERenderer {
-    private static final int TILE_SIZE = 16;
+    private static final int TILE_SIZE = 20;
     private int width;
     private int height;
     private int xOffset;
@@ -33,12 +33,12 @@ public class TERenderer {
         this.xOffset = xOff;
         this.yOffset = yOff;
         StdDraw.setCanvasSize(width * TILE_SIZE, height * TILE_SIZE);
-        Font font = new Font("Monaco", Font.BOLD, TILE_SIZE - 2);
+        Font font = new Font("Monaco", Font.BOLD, TILE_SIZE);
         StdDraw.setFont(font);
         StdDraw.setXscale(0, width);
         StdDraw.setYscale(0, height);
 
-        StdDraw.clear(new Color(0, 0, 0));
+        StdDraw.clear(new Color(75, 75, 75));
 
         StdDraw.enableDoubleBuffering();
         StdDraw.show();

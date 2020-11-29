@@ -2,7 +2,6 @@ package byow.Core;
 
 import byow.*;
 import byow.TileEngine.TERenderer;
-import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 import edu.princeton.cs.introcs.In;
@@ -19,26 +18,31 @@ import java.util.Random;
 
 public class Engine {
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 60;
+    public static final int WIDTH = 70;
     public static final int HEIGHT = 39;
     TETile[][] finalWorldFrame;
     TETile[][] filtered;
     TERenderer ter = new TERenderer();
     private Avatar ava;
+    private List<Avatar> enemies;
     private TETile playerSymbol = Tileset.AVATAR;
     private String savedCommands = "";
+    long seed;
     private boolean drawScreen = false;
+    private boolean alive = true;
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        ter.initialize(WIDTH, HEIGHT + 1);
+        enemies = new ArrayList<>();
         String input = "";
         drawScreen = true;
-        ter.initialize(WIDTH, HEIGHT + 1);
+        double floorNum = Double.POSITIVE_INFINITY;
         boolean finished = false, stopSeed = false, startSeed = false, canQuit = false, filterOn = true;
-        long seed = 0;
+        seed = 0;
         char first = 0;
         List<Character> seedChar = new ArrayList<>();
         showMainMenu();
@@ -87,6 +91,8 @@ public class Engine {
                             seed = (seed * 10) + (Long.parseLong(c.toString()));
                         }
                         finalWorldFrame = interactWithInputString("n" + seed + "s");
+                        createEnemy(10);
+                        floorNum = getNumFloor(finalWorldFrame);
                     } else {
                         savedCommands += curr;
                         moveAvatar(finalWorldFrame, "s");
@@ -114,8 +120,21 @@ public class Engine {
                     }
                     ter.renderFrame(filtered);
                     fillAvatar(finalWorldFrame);
+
+                }
+
+            }
+
+            if (floorNum == 0 || attacked()) {
+                showGameOver();
+            }
+
+            if (enemies != null) {
+                for (Avatar e : enemies) {
+                    moveEnemy(e);
                 }
             }
+
             if (finalWorldFrame != null) {
                 StdDraw.clear(Color.BLACK);
                 if (filterOn) {
@@ -224,35 +243,111 @@ public class Engine {
         return null;
     }
 
+    /* places avatar character in the world. */
     private void fillAvatar(TETile[][] frame) {
         int x = this.ava.getCurrPos().getX();
         int y = this.ava.getCurrPos().getY();
         frame[x][y] = playerSymbol;
     }
 
+    /* creates an avatar in a random spot in the world. */
     public void createAvatar(Tessellation t, RoomWorld world, TETile[][] frame, Random r) {
         int element = RandomUtils.uniform(r, 0, t.getWorldFloorPositions().size());
         this.ava = new Avatar(t.getWorldFloorPositions().get(element), world);
         fillAvatar(frame);
     }
 
+    /* moves the position of the avatar in the world. */
     public void moveAvatar(TETile[][] frame, String commands) {
+        int x = ava.getCurrPos().getX();
+        int y = ava.getCurrPos().getY();
         char[] commandArray = commands.toCharArray();
         for (char c: commandArray) {
-            frame[ava.getCurrPos().getX()][ava.getCurrPos().getY()] = Tileset.FLOOR;
+            frame[x][y] = Tileset.FLOOR;
             if (c == 'w' || c == 'W') {
+                frame[x][y] = Tileset.NOTHING;
                 this.ava.moveUp();
             } else if (c == 'a' || c == 'A') {
+                frame[x][y] = Tileset.NOTHING;
                 this.ava.moveLeft();
             }  else if (c == 's' || c == 'S') {
+                frame[x][y] = Tileset.NOTHING;
                 this.ava.moveDown();
             } else if (c == 'd' || c == 'D') {
+                frame[x][y] = Tileset.NOTHING;
                 this.ava.moveRight();
             }
         }
         fillAvatar(frame);
     }
 
+    /* creates n number of enemies in random positions in the world. */
+    public void createEnemy(int n) {
+        while (n > 0) {
+            Random r = new Random();
+            int x = RandomUtils.uniform(r, 0, WIDTH);
+            int y = RandomUtils.uniform(r, 0, HEIGHT);
+            boolean inBounds = false;
+
+            while (!inBounds) {
+                if (finalWorldFrame[x][y] != Tileset.FLOOR || finalWorldFrame[x][y] == Tileset.AVATAR) {
+                    x = RandomUtils.uniform(r, 0, WIDTH);
+                    y = RandomUtils.uniform(r, 0, HEIGHT);
+                } else {
+                    inBounds = true;
+                }
+            }
+
+            Avatar enemy = new Avatar(new Position(x, y), new RoomWorld(finalWorldFrame, WIDTH, HEIGHT, new Random(seed)));
+            enemies.add(enemy);
+            fillEnemy(enemy);
+             n -= 1;
+        }
+    }
+
+    /* places avatar character in the world. */
+    private void fillEnemy(Avatar enemy) {
+        int x = enemy.getCurrPos().getX();
+        int y = enemy.getCurrPos().getY();
+        finalWorldFrame[x][y] = Tileset.ENEMY;
+    }
+
+    /* moves the enemy of the avatar in the world. */
+    public void moveEnemy(Avatar e) {
+        int x = e.getCurrPos().getX();
+        int y = e.getCurrPos().getY();
+        Random r = new Random();
+        int m = RandomUtils.uniform(r, 0, 5);
+
+        finalWorldFrame[x][y] = Tileset.FLOOR;
+        if (m == 1) {
+            e.moveUp();
+        } else if (m == 2) {
+            e.moveLeft();
+        }  else if (m == 3) {
+            e.moveDown();
+        } else if (m == 4) {
+            e.moveRight();
+        }
+
+        StdDraw.pause(10);
+        fillEnemy(e);
+    }
+
+    /* returns if enemy and avatar is in same tile aka is 'attacked'. */
+    private boolean attacked() {
+        for (Avatar e : enemies) {
+            Position aPos = this.ava.getCurrPos();
+            Position ePos = e.getCurrPos();
+            if (aPos.equals(ePos)) {
+                alive = false;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* returns the String of all commands from previous games. */
     private String getHistory() {
         String pastCommands = "";
         In in = new In(System.getProperty("user.dir") + "/byow/Core/savedGame.txt");
@@ -264,6 +359,7 @@ public class Engine {
         return pastCommands;
     }
 
+    /* stores the commands to save game to be accessed later to load at start. */
     private void saveGame(String cummulative) {
         try {
             String path = System.getProperty("user.dir") + "/byow/Core/savedGame.txt";
@@ -276,6 +372,7 @@ public class Engine {
         }
     }
 
+    /* returns the original seed from the saved game. */
     private String getPastSeed(String pastCommands) {
         pastCommands = pastCommands.substring(1);
         int num = pastCommands.length();
@@ -294,6 +391,7 @@ public class Engine {
         return seedString;
     }
 
+    /* returns past movement commands from savedGame file. */
     private String getPastMovements(String history) {
         String past = history.substring(1);
         int num = past.length();
@@ -308,6 +406,7 @@ public class Engine {
         return past;
     }
 
+    /* Displays main menu page. */
     private void showMainMenu() {
         StdDraw.clear(Color.BLACK);
         StdDraw.setPenColor(Color.WHITE);
@@ -326,14 +425,7 @@ public class Engine {
         StdDraw.show();
     }
 
-    private void drawAvatar() {
-        StdDraw.setPenColor(Color.WHITE);
-        Font font = new Font("Monaco", Font.BOLD, 15);
-        StdDraw.setFont(font);
-        StdDraw.text(this.ava.getCurrPos().getX() + 0.5, this.ava.getCurrPos().getY() + 0.33, "Ω");
-        StdDraw.show();
-    }
-
+    /* displays screen to show that there is no saved game to load. */
     private void noSavedGame() {
         StdDraw.clear(Color.BLACK);
         StdDraw.setPenColor(Color.WHITE);
@@ -355,32 +447,27 @@ public class Engine {
         StdDraw.enableDoubleBuffering();
         Font fontSmall = new Font("Monaco", Font.BOLD, 25);
         StdDraw.setFont(fontSmall);
-        StdDraw.text(this.WIDTH * 2 / 6, this.HEIGHT * 8 / 11, "1. Default");
-        StdDraw.text(this.WIDTH * 4 / 6, this.HEIGHT * 8 / 11, "@");
-        StdDraw.text(this.WIDTH * 2 / 6, this.HEIGHT * 7 / 11, "2. Heart");
-        StdDraw.setPenColor(Color.RED);
-        StdDraw.text(this.WIDTH * 4 / 6, this.HEIGHT * 7 / 11, "❤");
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(this.WIDTH * 2 / 6, this.HEIGHT * 6 / 11, "3. Music Note");
-        StdDraw.setPenColor(Color.PINK);
-        StdDraw.text(this.WIDTH * 4 / 6, this.HEIGHT * 6 / 11, "♫");
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(this.WIDTH * 2 / 6, this.HEIGHT * 5 / 11, "4. Smiley Face");
-        StdDraw.setPenColor(Color.YELLOW);
-        StdDraw.text(this.WIDTH * 4 / 6, this.HEIGHT * 5 / 11, "☻");
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(this.WIDTH * 2 / 6, this.HEIGHT * 4 / 11, "5. Star");
-        StdDraw.setPenColor(Color.YELLOW);
-        StdDraw.text(this.WIDTH * 4 / 6, this.HEIGHT * 4 / 11, "⭑");
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(this.WIDTH * 2 / 6, this.HEIGHT * 3 / 11, "6. Sun");
-        StdDraw.setPenColor(Color.ORANGE);
-        StdDraw.text(this.WIDTH * 4 / 6, this.HEIGHT * 3 / 11, "☀");
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(this.WIDTH * 2 / 6, this.HEIGHT * 2 / 11, "7. Umbrella");
-        StdDraw.setPenColor(Color.cyan);
-        StdDraw.text(this.WIDTH * 4 / 6, this.HEIGHT * 2 / 11, "☂");
-        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(this.WIDTH * 3.5 / 6, this.HEIGHT * 8 / 11, "Default");
+        drawCharacter(this.WIDTH * 2 / 6, this.HEIGHT * 8 / 11, "@", Color.white);
+        StdDraw.text(this.WIDTH * 2.5 / 6, this.HEIGHT * 8 / 11, "(1)");
+        StdDraw.text(this.WIDTH * 3.5 / 6, this.HEIGHT * 6.9 / 11, "Heart");
+        StdDraw.text(this.WIDTH * 2.5 / 6, this.HEIGHT * 6.9 / 11, "(2)");
+        drawCharacter(this.WIDTH * 2 / 6, this.HEIGHT * 6.9 / 11, "❤", Color.red);
+        StdDraw.text(this.WIDTH * 3.5 / 6, this.HEIGHT * 6 / 11, "Music Note");
+        StdDraw.text(this.WIDTH * 2.5 / 6, this.HEIGHT * 6 / 11, "(3)");
+        drawCharacter(this.WIDTH * 2 / 6, this.HEIGHT * 6 / 11, "♫", Color.pink);
+        StdDraw.text(this.WIDTH * 3.5 / 6, this.HEIGHT * 5 / 11, "Smiley Face");
+        StdDraw.text(this.WIDTH * 2.5 / 6, this.HEIGHT * 5 / 11, "(4)");
+        drawCharacter(this.WIDTH * 2 / 6, this.HEIGHT * 5 / 11, "☻", Color.yellow);
+        StdDraw.text(this.WIDTH * 3.5 / 6, this.HEIGHT * 3.8 / 11, "Star");
+        StdDraw.text(this.WIDTH * 2.5 / 6, this.HEIGHT * 3.8 / 11, "(5)");
+        drawCharacter(this.WIDTH * 2 / 6, this.HEIGHT * 3.8 / 11, "⭑", Color.yellow);
+        StdDraw.text(this.WIDTH * 3.5 / 6, this.HEIGHT * 3 / 11, "Sun");
+        StdDraw.text(this.WIDTH * 2.5 / 6, this.HEIGHT * 3 / 11, "(6)");
+        drawCharacter(this.WIDTH * 2 / 6, this.HEIGHT * 3 / 11, "☀", Color.orange);
+        StdDraw.text(this.WIDTH * 3.5 / 6, this.HEIGHT * 1.9 / 11, "Umbrella");
+        StdDraw.text(this.WIDTH * 2.5 / 6, this.HEIGHT * 1.9 / 11, "(7)");
+        drawCharacter(this.WIDTH * 2 / 6, this.HEIGHT * 1.9 / 11, "☂", Color.cyan);
         Font font = new Font("Monaco", Font.BOLD, 16);
         StdDraw.setFont(font);
         StdDraw.show();
@@ -388,7 +475,18 @@ public class Engine {
         StdDraw.show();
     }
 
-    /*  */
+    /* helper to display character menu above. */
+    private void drawCharacter(double x, double y, String character, Color color) {
+        Font fontVeryBig = new Font("Monaco", Font.BOLD, 45);
+        Font fontSmall = new Font("Monaco", Font.BOLD, 25);
+        StdDraw.setFont(fontVeryBig);
+        StdDraw.setPenColor(color);
+        StdDraw.text(x, y, character);
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.setFont(fontSmall);
+    }
+
+    /*  changes the player avatar in the game. */
     private void changeCharacter() {
         boolean typed = false;
         while (!typed) {
@@ -438,6 +536,7 @@ public class Engine {
         }
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.textLeft(1, 39, identity);
+        StdDraw.textLeft(WIDTH * 8.5 / 10, 39, "Coins Left: " + getNumFloor(finalWorldFrame));
         StdDraw.show();
     }
 
@@ -468,6 +567,7 @@ public class Engine {
         return inBX && inBY;
     }
 
+    /* displays the prompt for the user to input seed. */
     private void showInputMenu() {
         StdDraw.clear(Color.BLACK);
         StdDraw.text(this.WIDTH / 2, this.HEIGHT * 5.8 / 7, "Input Your Desired Seed.");
@@ -475,11 +575,41 @@ public class Engine {
         StdDraw.show();
     }
 
+    /* displays what the user inputs as the seed. */
     private void showSeedInput(String in) {
         StdDraw.clear(Color.BLACK);
         StdDraw.text(this.WIDTH / 2, this.HEIGHT * 5.8 / 7, "Input Your Desired Seed.");
         StdDraw.text(this.WIDTH / 2, this.HEIGHT * 4.8 / 7, "Press the 'S' Key When Done.");
         StdDraw.text(this.WIDTH / 2, this.HEIGHT * 3 / 7, in);
         StdDraw.show();
+    }
+
+    /* returns the number of floor tiles in the world. */
+    private int getNumFloor(TETile[][] world) {
+        int num = 0;
+        for (int r = 0; r < WIDTH; r++) {
+            for (int c = 0; c < HEIGHT; c++) {
+                if (world[r][c] == Tileset.FLOOR) {
+                    num += 1;
+                }
+            }
+        }
+        return num;
+    }
+
+    /* displays a page to show that the game is over. */
+    private void showGameOver() {
+        StdDraw.clear(Color.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
+        Font font = new Font("Monaco", Font.BOLD, 40);
+        StdDraw.setFont(font);
+        if (getNumFloor(finalWorldFrame) == 0) {
+            StdDraw.text(WIDTH / 2, HEIGHT / 2, "WIN!");
+        } else {
+            StdDraw.text(WIDTH / 2, HEIGHT / 2, "YOU LOSE");
+        }
+        StdDraw.show();
+        StdDraw.pause(2000);
+        System.exit(0);
     }
 }
