@@ -41,13 +41,6 @@ public class ArrayDeque<T> {
         if (size >= items.length) {
             resizeUp();
         }
-
-        if (items.length > 15) {
-            double usageFactor = (double) size / (double) items.length;
-            if (usageFactor < 0.25) {
-                resizeDown();
-            }
-        }
     }
     /** adds @param item to the end of the list. */
     public void addLast(T item) {
@@ -61,13 +54,6 @@ public class ArrayDeque<T> {
 
         if (size >= items.length) {
             resizeUp();
-        }
-
-        if (items.length > 15) {
-            double usageFactor = (double) size / (double) items.length;
-            if (usageFactor < 0.25) {
-                resizeDown();
-            }
         }
     }
 
@@ -93,7 +79,7 @@ public class ArrayDeque<T> {
     private void resizeDown() {
         int first = nextFirst + 1;
 
-        T[] holder = (T[]) new Object[size / 2];
+        T[] holder = (T[]) new Object[items.length / 2];
 
         if (nextLast != 0) {
             System.arraycopy(items, 0, holder, items.length - first, nextLast);
@@ -165,10 +151,6 @@ public class ArrayDeque<T> {
 
             size--;
 
-            if (size >= items.length) {
-                resizeUp();
-            }
-
             if (items.length > 15) {
                 double usageFactor = (double) size / (double) items.length;
                 if (usageFactor < 0.25) {
@@ -200,10 +182,6 @@ public class ArrayDeque<T> {
             }
 
             size--;
-
-            if (size >= items.length) {
-                resizeUp();
-            }
 
             if (items.length > 15) {
                 double usageFactor = (double) size / (double) items.length;
