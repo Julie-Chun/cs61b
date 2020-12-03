@@ -122,7 +122,7 @@ public class ArrayDeque<T> {
             System.arraycopy(holder, 0, copy, 0, holder.length);
             items = copy;
             nextFirst = items.length - 1;
-            nextLast = size() - 1;
+            nextLast = size();
         } else if (first > last) {
             T[] front = slice(items, 0, last);
             T[] back = slice(items, first, items.length - 1);
@@ -210,7 +210,7 @@ public class ArrayDeque<T> {
             }
 
             if (items.length > 15) {
-                double usageFactor = (double) size / (double) items.length;
+                double usageFactor = (double) size() / (double) items.length;
                 if (usageFactor < 0.25) {
                     resizeDown();
                 }
@@ -225,24 +225,11 @@ public class ArrayDeque<T> {
     public T get(int index) {
         if (index < size) {
             int first = getFirstIndex();
-            return items[(first + index) % items.length];
+            int find = first + index;
+            return items[find % items.length];
         } else {
-            System.out.println("not inside index");
             return null;
         }
-    }
-
-    public static void main(String[] args) {
-        ArrayDeque<Integer> array = new ArrayDeque<>();
-
-        //array.addFirst();
-        //array.addLast();
-        //array.removeFirst();
-        //array.removeLast();
-        //array.get();
-        //array.isEmpty();
-
-
     }
 
     /** returns a smaller array from index start to index end inclusive. */
