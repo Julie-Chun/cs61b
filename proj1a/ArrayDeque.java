@@ -21,40 +21,42 @@ public class ArrayDeque<T> {
      * nextFirst position, and nextLast position reference.
      * */
     public ArrayDeque() {
-        size = 0;
-        items = (T[]) new Object[8];
-        nextFirst = items.length / 2;
-        nextLast = nextFirst + 1;
+        this.size = 0;
+        this.items = (T[]) new Object[8];
+        this.nextFirst = this.items.length / 2;
+        this.nextLast = this.nextFirst + 1;
     }
 
     /** adds @param item to the front of the list. */
     public void addFirst(T item) {
-        items[nextFirst] = item;
-        size++;
-        nextFirst--;
-
-        if (nextFirst < 0) {
-            nextFirst = items.length - 1;
-        }
-
-        if (size == items.length - 1) {
+        this.size++;
+        if (this.size > this.items.length) {
             resizeUp();
         }
 
+        this.items[this.nextFirst] = item;
+        this.nextFirst -= 1;
+
+        if (this.nextFirst < 0) {
+            this.nextFirst = this.items.length - 1;
+        }
     }
+
     /** adds @param item to the end of the list. */
     public void addLast(T item) {
-        items[nextLast] = item;
         size++;
+
+        if (size > items.length) {
+            resizeUp();
+        }
+
+        items[nextLast] = item;
         nextLast++;
 
         if (nextLast == items.length) {
             nextLast = 0;
         }
 
-        if (size == items.length - 1) {
-            resizeUp();
-        }
     }
 
     /** rescales the list so that its usage factor is more
@@ -139,7 +141,7 @@ public class ArrayDeque<T> {
     }
     /** @return true if the array list is empty. */
     public boolean isEmpty() {
-        for (int i = nextFirst + 1; i < size + nextFirst + 1; i++) {
+        for (int i = 0; i < this.items.length; i++) {
             if (items[i] != null) {
                 return false;
             }
@@ -154,10 +156,24 @@ public class ArrayDeque<T> {
 
     /** prints the list of size size. */
     public void printDeque() {
+        int first = nextFirst + 1;
+
+        if (nextFirst >= items.length) {
+            first = 0;
+        }
+
         if (size > 0) {
-            for (int i = 0; i < items.length - 1; i++) {
+            for (int i = first; i < items.length; i++) {
                 if (items[i] != null) {
                     System.out.print(items[i] + " ");
+                }
+            }
+
+            if (nextLast != 0) {
+                for (int i = 0; i < first; i++) {
+                    if (items[i] != null) {
+                        System.out.print(items[i] + " ");
+                    }
                 }
             }
         }
@@ -168,7 +184,7 @@ public class ArrayDeque<T> {
     public T removeFirst() {
         if (size > 0) {
             int first = getFirstIndex();
-            T pop = get(first);
+            T pop = this.items[first];
             items[first] = null;
             nextFirst++;
             size--;
@@ -179,17 +195,17 @@ public class ArrayDeque<T> {
                     resizeDown();
                 }
             }
-
             return pop;
+        } else {
+            return null;
         }
-        return null;
     }
 
     /** @return the last item of the list and removes it from the list. */
     public T removeLast() {
         if (size > 0) {
             int last = getLastIndex();
-            T pop = get(last);
+            T pop = this.items[last];
             items[last] = null;
             nextLast--;
             size--;
@@ -202,14 +218,15 @@ public class ArrayDeque<T> {
             }
 
             return pop;
+        } else {
+            return null;
         }
-        return null;
     }
 
     /** @return the item of the list at @param index . */
     public T get(int index) {
         if (index < size) {
-            return items[index];
+            return items[(nextFirst + 1 + index) % items.length];
         }
         return null;
     }
@@ -217,18 +234,12 @@ public class ArrayDeque<T> {
     public static void main(String[] args) {
         ArrayDeque<Integer> array = new ArrayDeque<>();
 
-        array.addFirst(1);
-        array.addFirst(2);
-        array.addFirst(3);
-        array.addFirst(4);
-        array.addFirst(5);
-        array.addLast(6);
-        array.addLast(7);
-        array.addLast(8);
-
+        array.addLast(0);
+        array.addLast(1);
+        //array.addFirst(3);
+        Object result = array.get(1);
+        System.out.println("get: " + result);
         array.printDeque();
-        System.out.println(array.nextFirst);
-        System.out.println(array.nextLast);
     }
 
     /** returns a smaller array from index start to index end inclusive. */
@@ -272,7 +283,7 @@ public class ArrayDeque<T> {
         if (nextLast == 0) {
             return items.length - 1;
         } else {
-            return nextLast - 1;
+            return this.nextLast - 1;
         }
     }
 }
