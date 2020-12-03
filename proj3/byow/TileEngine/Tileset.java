@@ -24,7 +24,7 @@ public class Tileset {
     public static final TETile SUN = new TETile('☀', Color.orange, Color.black, "you");
     public static final TETile STAR = new TETile('⭑', Color.yellow, Color.black, "you");
     public static final TETile HEART = new TETile('❤', Color.red, Color.black, "you");
-    public static final TETile ENEMY = new TETile('Ω', Color.white, Color.black, "enemy");
+    public static final TETile ENEMY = new TETile('Ω',new Color(10, 230, 60), Color.black, "enemy");
     public static final TETile WALL = new TETile('☲', new Color(150, 105, 105), new Color(30, 10, 10),
             "wall");
     public static final TETile FLOOR = new TETile('·', new Color(230, 188, 100), Color.black,

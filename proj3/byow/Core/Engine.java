@@ -28,6 +28,7 @@ public class Engine {
     private TETile playerSymbol = Tileset.AVATAR;
     private String savedCommands = "";
     long seed;
+    double floorNum;
     private boolean drawScreen = false;
     private boolean alive = true;
 
@@ -40,7 +41,7 @@ public class Engine {
         enemies = new ArrayList<>();
         String input = "";
         drawScreen = true;
-        double floorNum = Double.POSITIVE_INFINITY;
+        floorNum = Double.POSITIVE_INFINITY;
         boolean finished = false, stopSeed = false, startSeed = false, canQuit = false, filterOn = true;
         seed = 0;
         char first = 0;
@@ -91,7 +92,7 @@ public class Engine {
                             seed = (seed * 10) + (Long.parseLong(c.toString()));
                         }
                         finalWorldFrame = interactWithInputString("n" + seed + "s");
-                        createEnemy(10);
+                        createEnemy(7);
                         floorNum = getNumFloor(finalWorldFrame);
                     } else {
                         savedCommands += curr;
@@ -607,6 +608,7 @@ public class Engine {
             StdDraw.text(WIDTH / 2, HEIGHT / 2, "WIN!");
         } else {
             StdDraw.text(WIDTH / 2, HEIGHT / 2, "YOU LOSE");
+            StdDraw.text(WIDTH / 2, HEIGHT * 1.5 / 2, "YOU HAD " + (int) floorNum + " COINS LEFT.");
         }
         StdDraw.show();
         StdDraw.pause(2000);

@@ -29,7 +29,7 @@ public class UnionFind {
     /* Returns the parent of v1. If v1 is the root of a tree, returns the
        negative size of the tree for which v1 is the root. */
     public int parent(int v1) {
-        return parent[v1];
+        return this.parent[v1];
     }
 
     /* Returns true if nodes v1 and v2 are connected. */
@@ -60,38 +60,12 @@ public class UnionFind {
     /* Returns the root of the set v1 belongs to. Path-compression is employed
        allowing for fast search-time. */
     public int find(int v1) {
-        /*
-        validate(v1);
-
-        if (parent(v1) < 0) {
-            return parent(v1);
-        } else {
-            ArrayList<Integer> arr = new ArrayList<>();
-            int root = v1;
-
-            while (parent[root] > 0) {
-                arr.add(root);
-                root = parent(root);
-            }
-
-            for (int i : arr) {
-                parent[i] = root;
-            }
-
-            return root;
-        }
-        */
-
-
-
         validate(v1);
         if (parent[v1] < 0) {
             return v1;
         } else {
             return find(parent[v1]);
         }
-
-
 
     }
 

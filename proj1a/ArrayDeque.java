@@ -37,7 +37,7 @@ public class ArrayDeque<T> {
             nextFirst = items.length - 1;
         }
 
-        if (size > items.length - 1) {
+        if (size == items.length - 1) {
             resizeUp();
         }
 
@@ -52,7 +52,7 @@ public class ArrayDeque<T> {
             nextLast = 0;
         }
 
-        if (size > items.length - 1) {
+        if (size == items.length - 1) {
             resizeUp();
         }
     }
@@ -89,29 +89,24 @@ public class ArrayDeque<T> {
 
     /** rescales the deque to twice its size once it is full. */
     private void resizeUp() {
-        int first = nextFirst - 1;
-        int last = nextLast + 1;
-
-        if (nextLast == 0) {
-            last = items.length - 1;
-        }
-
-        if (nextFirst == items.length - 1) {
-            first = 0;
-        }
+        int first = getFirstIndex();
+        int last = getLastIndex();
 
         if (first < last) {
-            T[] holder = slice(items, first, last);
             T[] copy = (T[]) new Object[items.length * 2];
-            System.arraycopy(holder, 0, copy, first, holder.length);
-            items = holder;
-        } else if (first > last) {
+            System.arraycopy(items, 0, copy, 0, size());
+            items = copy;
+            nextFirst = items.length - 1;
+            nextLast = size() + 1;
+        } else {
             T[] front = slice(items, 0, last);
             T[] back = slice(items, first, items.length - 1);
             T[] copy = (T[]) new Object[items.length * 2];
             System.arraycopy(front, 0, copy, 0, front.length);
-            System.arraycopy(back, 0, copy, first, back.length);
+            System.arraycopy(back, 0, copy, copy.length - back.length, back.length);
             items = merge(front, back);
+            nextFirst = items.length - back.length - 1;
+            nextLast = front.length;
         }
 
         System.out.println("resize UP");
@@ -119,29 +114,25 @@ public class ArrayDeque<T> {
 
     /** rescales the list so that its usage factor is more than 25%. */
     private void resizeDown() {
-        int first = nextFirst - 1;
-        int last = nextLast + 1;
-
-        if (nextLast == 0) {
-            last = items.length - 1;
-        }
-
-        if (nextFirst == items.length - 1) {
-            first = 0;
-        }
+        int first = getFirstIndex();
+        int last = getLastIndex();
 
         if (first < last) {
             T[] holder = slice(items, first, last);
             T[] copy = (T[]) new Object[items.length / 2];
-            System.arraycopy(holder, 0, copy, first, holder.length);
-            items = holder;
+            System.arraycopy(holder, 0, copy, 0, holder.length);
+            items = copy;
+            nextFirst = items.length - 1;
+            nextLast = size() + 1;
         } else if (first > last) {
             T[] front = slice(items, 0, last);
             T[] back = slice(items, first, items.length - 1);
             T[] copy = (T[]) new Object[items.length / 2];
             System.arraycopy(front, 0, copy, 0, front.length);
-            System.arraycopy(back, 0, copy, first, back.length);
+            System.arraycopy(back, 0, copy, copy.length - back.length, back.length);
             items = merge(front, back);
+            nextFirst = items.length - back.length - 1;
+            nextLast = front.length;
         }
 
         System.out.println("resize Down");
@@ -176,8 +167,9 @@ public class ArrayDeque<T> {
     /** @return the first item of the list and removes it from the list. */
     public T removeFirst() {
         if (size > 0) {
-            T pop = items[nextFirst + 1];
-            items[nextFirst + 1] = null;
+            int first = getFirstIndex();
+            T pop = get(first);
+            items[first] = null;
             nextFirst++;
             size--;
 
@@ -196,8 +188,9 @@ public class ArrayDeque<T> {
     /** @return the last item of the list and removes it from the list. */
     public T removeLast() {
         if (size > 0) {
-            T pop = items[nextLast - 1];
-            items[nextLast - 1] = null;
+            int last = getLastIndex();
+            T pop = get(last);
+            items[last] = null;
             nextLast--;
             size--;
 
@@ -216,7 +209,7 @@ public class ArrayDeque<T> {
     /** @return the item of the list at @param index . */
     public T get(int index) {
         if (index < size) {
-            return items[nextFirst + 1 + index];
+            return items[index];
         }
         return null;
     }
@@ -263,5 +256,23 @@ public class ArrayDeque<T> {
         }
 
         return sliced;
+    }
+
+    /** returns the index where the first element of the deque starts. */
+    private int getFirstIndex() {
+        if (nextFirst == items.length - 1) {
+            return 0;
+        } else {
+            return nextFirst + 1;
+        }
+    }
+
+    /** returns the index where the last element of the deque starts. */
+    private int getLastIndex() {
+        if (nextLast == 0) {
+            return items.length - 1;
+        } else {
+            return nextLast - 1;
+        }
     }
 }
