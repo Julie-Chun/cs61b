@@ -155,14 +155,14 @@ public class ArrayDeque<T> {
 
         if (size > 0) {
             for (int i = first; i < items.length; i++) {
-                if (true) {
+                if (items[i] != null) {
                     System.out.print(items[i] + " ");
                 }
             }
 
             if (nextLast != 0) {
                 for (int i = 0; i < first; i++) {
-                    if (true) {
+                    if (items[i] != null) {
                         System.out.print(items[i] + " ");
                     }
                 }
@@ -225,8 +225,10 @@ public class ArrayDeque<T> {
     public T get(int index) {
         if (index < size) {
             return items[(nextFirst + 1 + index) % items.length];
+        } else {
+            System.out.println("not inside index");
+            return null;
         }
-        return null;
     }
 
     public static void main(String[] args) {
@@ -239,35 +241,8 @@ public class ArrayDeque<T> {
         //array.get();
         //array.isEmpty();
 
-        array.addFirst(0);
-        array.addFirst(1);
-        array.removeFirst();
-        array.get(0);
-        array.removeFirst();
-        array.addLast(5);
-        array.addLast(6);
-        array.addFirst(7);
-        array.addFirst(8);
-        array.addFirst(9);
-        array.removeFirst();
-        array.get(1);
-        array.addFirst(12);
-        array.removeFirst();
-        array.addFirst(14);
-        array.addFirst(15);
-        array.addLast(16);
-        array.removeLast();
-        array.get(3);
-        array.addLast(19);
-        array.addFirst(20);
-        array.printDeque();
-        array.addLast(21);
-        array.printDeque();
-        array.removeLast();
-        array.removeLast();
-        array.printDeque();
-    }
 
+    }
 
     /** returns a smaller array from index start to index end inclusive. */
     private T[] slice(T[] array, int start, int end) {
