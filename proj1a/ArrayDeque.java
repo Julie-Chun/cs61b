@@ -224,8 +224,8 @@ public class ArrayDeque<T> {
     /** @return the item of the list at @param index . */
     public T get(int index) {
         if (index < size) {
-            System.out.println("get(" + index + "): " + items[(nextFirst + 1 + index) % items.length]);
-            return items[(nextFirst + 1 + index) % items.length];
+            int first = getFirstIndex();
+            return items[(first + index) % items.length];
         } else {
             System.out.println("not inside index");
             return null;
