@@ -96,7 +96,7 @@ public class ArrayDeque<T> {
 
         if (first < last) {
             T[] copy = (T[]) new Object[items.length * 2];
-            System.arraycopy(items, 0, copy, 0, size());
+            System.arraycopy(items, 0, copy, 0, items.length);
             items = copy;
             nextFirst = items.length - 1;
             nextLast = size() + 1;
@@ -195,7 +195,6 @@ public class ArrayDeque<T> {
                     resizeDown();
                 }
             }
-            System.out.println("removed: " + pop);
             return pop;
         } else {
             return null;
@@ -221,7 +220,6 @@ public class ArrayDeque<T> {
                     resizeDown();
                 }
             }
-            System.out.println("removed: " + pop);
             return pop;
         } else {
             return null;
@@ -231,7 +229,6 @@ public class ArrayDeque<T> {
     /** @return the item of the list at @param index . */
     public T get(int index) {
         if (index < size) {
-            System.out.println("get: " + items[(nextFirst + 1 + index) % items.length]);
             return items[(nextFirst + 1 + index) % items.length];
         }
         return null;
@@ -249,34 +246,27 @@ public class ArrayDeque<T> {
 
         array.addLast(0);
         array.addLast(1);
-        array.removeLast();
-        array.addFirst(3);
+        array.addLast(2);
+        array.addLast(3);
         array.addLast(4);
-        array.removeLast();
+        array.addLast(5);
+        array.addLast(6);
+        array.addLast(7);
+        array.addLast(8);
+        array.printDeque();
         array.get(0);
         array.get(1);
-        array.get(0);
-        array.addFirst(9);
-        array.removeLast();
-        array.get(0);
-        array.addLast(12);
-        array.addLast(13);
-        array.get(3);
-        array.addLast(15);
-        array.removeFirst();
-        array.addFirst(17);
-        array.addFirst(18);
         array.get(2);
-        array.get(0);
-        array.removeLast();
-        array.removeLast();
+        array.get(3);
+        array.get(4);
+        array.get(5);
+        array.get(6);
+        array.get(7);
+        array.get(8);
 
-        array.printDeque();
     }
     
  */
-
-
 
     /** returns a smaller array from index start to index end inclusive. */
     private T[] slice(T[] array, int start, int end) {
@@ -284,6 +274,7 @@ public class ArrayDeque<T> {
         int index = 0;
         for (int i = start; i <= end; i++) {
             sliced[index] = array[i];
+            index++;
         }
         return sliced;
     }
