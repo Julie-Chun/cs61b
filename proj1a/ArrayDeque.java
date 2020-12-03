@@ -110,8 +110,6 @@ public class ArrayDeque<T> {
             nextFirst = items.length - back.length - 1;
             nextLast = front.length;
         }
-
-        System.out.println("resize UP");
     }
 
     /** rescales the list so that its usage factor is more than 25%. */
@@ -136,8 +134,6 @@ public class ArrayDeque<T> {
             nextFirst = items.length - back.length - 1;
             nextLast = front.length;
         }
-
-        System.out.println("resize Down");
     }
     /** @return true if the array list is empty. */
     public boolean isEmpty() {
@@ -189,12 +185,17 @@ public class ArrayDeque<T> {
             nextFirst++;
             size--;
 
+            if (nextFirst == items.length) {
+                nextFirst = 0;
+            }
+
             if (items.length > 15) {
                 double usageFactor = (double) size / (double) items.length;
                 if (usageFactor < 0.25) {
                     resizeDown();
                 }
             }
+            System.out.println("removed: " + pop);
             return pop;
         } else {
             return null;
@@ -210,13 +211,17 @@ public class ArrayDeque<T> {
             nextLast--;
             size--;
 
+            if (nextLast < 0) {
+                nextLast = items.length - 1;
+            }
+
             if (items.length > 15) {
                 double usageFactor = (double) size / (double) items.length;
                 if (usageFactor < 0.25) {
                     resizeDown();
                 }
             }
-
+            System.out.println("removed: " + pop);
             return pop;
         } else {
             return null;
@@ -226,21 +231,52 @@ public class ArrayDeque<T> {
     /** @return the item of the list at @param index . */
     public T get(int index) {
         if (index < size) {
+            System.out.println("get: " + items[(nextFirst + 1 + index) % items.length]);
             return items[(nextFirst + 1 + index) % items.length];
         }
         return null;
     }
-
+/*
     public static void main(String[] args) {
         ArrayDeque<Integer> array = new ArrayDeque<>();
 
+        //array.addFirst();
+        //array.addLast();
+        //array.removeFirst();
+        //array.removeLast();
+        //array.get();
+        //array.isEmpty();
+
         array.addLast(0);
         array.addLast(1);
-        //array.addFirst(3);
-        Object result = array.get(1);
-        System.out.println("get: " + result);
+        array.removeLast();
+        array.addFirst(3);
+        array.addLast(4);
+        array.removeLast();
+        array.get(0);
+        array.get(1);
+        array.get(0);
+        array.addFirst(9);
+        array.removeLast();
+        array.get(0);
+        array.addLast(12);
+        array.addLast(13);
+        array.get(3);
+        array.addLast(15);
+        array.removeFirst();
+        array.addFirst(17);
+        array.addFirst(18);
+        array.get(2);
+        array.get(0);
+        array.removeLast();
+        array.removeLast();
+
         array.printDeque();
     }
+    
+ */
+
+
 
     /** returns a smaller array from index start to index end inclusive. */
     private T[] slice(T[] array, int start, int end) {
