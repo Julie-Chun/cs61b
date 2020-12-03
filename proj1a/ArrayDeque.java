@@ -49,7 +49,6 @@ public class ArrayDeque<T> {
         if (size > items.length) {
             resizeUp();
         }
-
         items[nextLast] = item;
         nextLast++;
 
@@ -106,7 +105,7 @@ public class ArrayDeque<T> {
             T[] copy = (T[]) new Object[items.length * 2];
             System.arraycopy(front, 0, copy, 0, front.length);
             System.arraycopy(back, 0, copy, copy.length - back.length, back.length);
-            items = merge(front, back);
+            items = copy;
             nextFirst = items.length - back.length - 1;
             nextLast = front.length;
         }
@@ -130,7 +129,7 @@ public class ArrayDeque<T> {
             T[] copy = (T[]) new Object[items.length / 2];
             System.arraycopy(front, 0, copy, 0, front.length);
             System.arraycopy(back, 0, copy, copy.length - back.length, back.length);
-            items = merge(front, back);
+            items = copy;
             nextFirst = items.length - back.length - 1;
             nextLast = front.length;
         }
@@ -233,7 +232,7 @@ public class ArrayDeque<T> {
         }
         return null;
     }
-/*
+
     public static void main(String[] args) {
         ArrayDeque<Integer> array = new ArrayDeque<>();
 
@@ -252,6 +251,7 @@ public class ArrayDeque<T> {
         array.addLast(5);
         array.addLast(6);
         array.addLast(7);
+        array.printDeque();
         array.addLast(8);
         array.printDeque();
         array.get(0);
@@ -265,8 +265,7 @@ public class ArrayDeque<T> {
         array.get(8);
 
     }
-    
- */
+
 
     /** returns a smaller array from index start to index end inclusive. */
     private T[] slice(T[] array, int start, int end) {
