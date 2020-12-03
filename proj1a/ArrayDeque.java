@@ -98,7 +98,7 @@ public class ArrayDeque<T> {
             System.arraycopy(items, 0, copy, 0, items.length);
             items = copy;
             nextFirst = items.length - 1;
-            nextLast = size() + 1;
+            nextLast = size() - 1;
         } else {
             T[] front = slice(items, 0, last);
             T[] back = slice(items, first, items.length - 1);
@@ -122,7 +122,7 @@ public class ArrayDeque<T> {
             System.arraycopy(holder, 0, copy, 0, holder.length);
             items = copy;
             nextFirst = items.length - 1;
-            nextLast = size() + 1;
+            nextLast = size() - 1;
         } else if (first > last) {
             T[] front = slice(items, 0, last);
             T[] back = slice(items, first, items.length - 1);
@@ -151,22 +151,18 @@ public class ArrayDeque<T> {
 
     /** prints the list of size size. */
     public void printDeque() {
-        int first = nextFirst + 1;
-
-        if (nextFirst >= items.length) {
-            first = 0;
-        }
+        int first = getFirstIndex();
 
         if (size > 0) {
             for (int i = first; i < items.length; i++) {
-                if (items[i] != null) {
+                if (true) {
                     System.out.print(items[i] + " ");
                 }
             }
 
             if (nextLast != 0) {
                 for (int i = 0; i < first; i++) {
-                    if (items[i] != null) {
+                    if (true) {
                         System.out.print(items[i] + " ");
                     }
                 }
@@ -243,27 +239,33 @@ public class ArrayDeque<T> {
         //array.get();
         //array.isEmpty();
 
-        array.addLast(0);
-        array.addLast(1);
-        array.addLast(2);
-        array.addLast(3);
-        array.addLast(4);
+        array.addFirst(0);
+        array.addFirst(1);
+        array.removeFirst();
+        array.get(0);
+        array.removeFirst();
         array.addLast(5);
         array.addLast(6);
-        array.addLast(7);
-        array.printDeque();
-        array.addLast(8);
-        array.printDeque();
-        array.get(0);
+        array.addFirst(7);
+        array.addFirst(8);
+        array.addFirst(9);
+        array.removeFirst();
         array.get(1);
-        array.get(2);
+        array.addFirst(12);
+        array.removeFirst();
+        array.addFirst(14);
+        array.addFirst(15);
+        array.addLast(16);
+        array.removeLast();
         array.get(3);
-        array.get(4);
-        array.get(5);
-        array.get(6);
-        array.get(7);
-        array.get(8);
-
+        array.addLast(19);
+        array.addFirst(20);
+        array.printDeque();
+        array.addLast(21);
+        array.printDeque();
+        array.removeLast();
+        array.removeLast();
+        array.printDeque();
     }
 
 
