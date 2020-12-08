@@ -22,7 +22,7 @@ import static bearmaps.proj2d.utils.Constants.*;
 /**
  * Handles requests from the web browser for map images. These images
  * will be rastered into one large image to be displayed to the user.
- * @author rahul, Josh Hug, _________
+ * @author rahul, Josh Hug, Julie Chun
  */
 public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<String, Object>> {
 
@@ -91,9 +91,9 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double lrlat = requestParams.get("lrlat");
         double londdpp = (lrlon - ullon) / w;
 
-        double tile_ullat = ROOT_ULLAT;
+        double tile_ullon = ROOT_ULLON;
         double tile_lrlon = ROOT_LRLON;
-        double tile_londpp = (tile_lrlon - tile_ullat) / TILE_SIZE;
+        double tile_londpp = (tile_lrlon - tile_ullon) / TILE_SIZE;
 
         int depth = 0;
 
@@ -118,45 +118,38 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         }
 
-        while (londdpp < tile_londpp) {
+        while (londdpp < tile_londpp && depth < 7) {
             depth += 1;
-            tile_ullat = tile_ullat / 2;
+            tile_ullon = tile_ullon / 2;
             tile_lrlon = tile_lrlon / 2;
-            tile_londpp = (ROOT_LRLON - ROOT_ULLAT) / TILE_SIZE;
+            tile_londpp = (tile_lrlon - tile_ullon) / TILE_SIZE;
         }
 
-        String[][] render_grid = new String[(int)Math.pow(2, depth)][(int)Math.pow(2, depth)];
+        int num_tiles = (int) Math.pow(2, depth);
+        double scaleH = Math.abs(ROOT_ULLON - ROOT_LRLON) / num_tiles;
+        double scaleV = Math.abs(ROOT_ULLAT - ROOT_LRLAT) / num_tiles;
 
-        double tile_width = Math.abs(ROOT_LRLON - ROOT_LRLON) / Math.pow(2, depth);
-        double tile_height = Math.abs(ROOT_LRLAT - ROOT_LRLAT) / Math.pow(2, depth);
+        int x1 = toGrid(ullon, num_tiles, true);
+        int x2 = toGrid(ullon + (w * londdpp), num_tiles, true);
+        int y1 = toGrid(ullat, num_tiles, false);
+        int y2 = toGrid(ullat - (h * londdpp), num_tiles, false);
 
+        int num_tiles_w = Math.abs(x1 - x2) + 1;
+        int num_tiles_h = Math.abs(y1 - y2) + 1;
+        String[][] render_grid = new String[num_tiles_h][num_tiles_w];
 
+        double raster_ul_lon = ROOT_ULLON + (x1 * scaleH);
+        double raster_lr_lon = ROOT_ULLON + ((x1 + num_tiles_w) * scaleH);
+        double raster_ul_lat = ROOT_ULLAT - (y1 * scaleV);
+        double raster_lr_lat = ROOT_ULLAT - ((y1 + num_tiles_h) * scaleV);
 
-
-        int x2 = (int) (Math.abs(ROOT_ULLON - lrlon) / tile_width);
-        int x1 = (int) (Math.abs(ROOT_ULLON - ullon) / tile_width);
-        int y2 = (int) (Math.abs(ROOT_ULLAT - lrlat) / tile_height);
-        int y1 = (int) (Math.abs(ROOT_ULLAT - ullat) / tile_height);
-
-        int row = 0;
-        int col = 0;
-        for (int r = y1; r <= y2; r++) {
-            for (int c = x1; c <= x2; c++) {
-                render_grid[row][col] = "d" + depth + "_x" + c + "_y" + r;
-                col += 1;
-            }
-            row += 1;
-        }
-
-        double raster_ul_lon = ROOT_ULLON + (x1 * tile_width);
-        double raster_ul_lat = ROOT_ULLAT + (y1 * tile_height);
-        double raster_lr_lon = ROOT_LRLON + (x2 * tile_width);
-        double raster_lr_lat = ROOT_LRLAT + (y2 * tile_height);
+        fillGrid(render_grid, num_tiles_w, num_tiles_h, x1, y1, depth);
 
         System.out.println("yo, wanna know the parameters given by the web browser? They are:");
         System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
         results.put("depth", depth);
+        results.put("query_success", query_success);
         results.put("render_grid", render_grid);
         results.put("raster_ul_lon", raster_ul_lon);
         results.put("raster_ul_lat", raster_ul_lat);
@@ -164,7 +157,31 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         results.put("raster_lr_lat", raster_lr_lat);
         System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
                 + "your browser.");
+
         return results;
+    }
+
+    /** Return the int of the conversion of the latitude or longitude to a point on the map. */
+    private int toGrid(double point, int numTiles, boolean longitude) {
+        if (longitude) {
+            double scale = Math.abs(ROOT_ULLON - ROOT_LRLON) / numTiles;
+            return (int) (Math.abs(ROOT_ULLON - point) / scale);
+        } else {
+            double scale = Math.abs(ROOT_ULLAT - ROOT_LRLAT) / numTiles;
+            return (int) (Math.abs(ROOT_ULLAT - point) / scale);
+        }
+    }
+
+    private String[][] fillGrid(String[][] map, int w, int h, int startX, int startY, int depth) {
+        for (int col = 0; col < h; col++) {
+            for (int row = 0; row < w; row++) {
+                int x = startX + row;
+                int y = startY + col;
+                String input = "d" + depth + "_x" + x + "_y" + y + ".png";
+                map[col][row] = input;
+            }
+        }
+        return map;
     }
 
     @Override
