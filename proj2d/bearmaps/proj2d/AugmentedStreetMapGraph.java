@@ -16,11 +16,24 @@ import java.util.*;
  */
 public class AugmentedStreetMapGraph extends StreetMapGraph {
     List<Node> nodes;
+    List<Point> points;
+    Map<Point, Node> map;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         // You might find it helpful to uncomment the line below:
         nodes = this.getNodes();
+        points = new ArrayList<>();
+        map = new HashMap<>();
+
+        for (Node n : this.nodes) {
+            long nodeId = n.id();
+            if (!neighbors(nodeId).isEmpty()) {
+                Point input = new Point(n.lon(), n.lat());
+                this.points.add(input);
+                this.map.put(input, n);
+            }
+        }
     }
 
 
@@ -32,25 +45,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * @return The id of the node in the graph closest to the target.
      */
     public long closest(double lon, double lat) {
-        Point target = new Point(lon, lat);
-
-        List<Point> points = new ArrayList<>();
-        Map<Point, Node> map = new HashMap<>();
-
-        for (Node n : this.nodes) {
-            long nodeId = n.id();
-            if (!neighbors(nodeId).isEmpty()) {
-                double longitude = n.lon();
-                double latitude = n.lat();
-                Point input = new Point(longitude, latitude);
-                points.add(input);
-                map.put(input, n);
-            }
-        }
-
-        WeirdPointSet pointSet = new WeirdPointSet(points);
+        WeirdPointSet pointSet = new WeirdPointSet(this.points);
         Point closestPoint = pointSet.nearest(lon, lat);
-        Node closestNode = map.get(closestPoint);
+        Node closestNode = this.map.get(closestPoint);
         long closestDist = closestNode.id();
 
         return closestDist;

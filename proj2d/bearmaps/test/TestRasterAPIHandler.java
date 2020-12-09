@@ -37,10 +37,23 @@ public class TestRasterAPIHandler {
 
     @Test
     public void testProcessRequests() throws Exception {
+        Map<String, Double> map = new HashMap<>();
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("object", (Object)"extra");
+
+        map.put("lrlon", -122.21226818712275);
+        map.put("ullon", -122.27525316837772);
+        map.put("w", 897.1438426698098);
+        map.put("h", 499.1920821532648);
+        map.put("ullat", 37.86504186966802);
+        map.put("lrlat", 37.83168324219232);
         List<Map<String, Double>> testParams = paramsFromFile();
         List<Map<String, Object>> expectedResults = resultsFromFile();
 
-        for (int i = 0; i < NUM_TESTS; i++) {
+        testParams.add(map);
+        expectedResults.add(map1);
+
+        for (int i = 0; i < NUM_TESTS + 1; i++) {
             System.out.println(String.format("Running test: %d", i));
             Map<String, Double> params = testParams.get(i);
             Map<String, Object> actual = rasterer.processRequest(params, null);
