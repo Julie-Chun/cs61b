@@ -143,10 +143,6 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double raster_lr_lon = ROOT_ULLON + ((x1 + num_tiles_w) * scaleH);
         double raster_ul_lat = ROOT_ULLAT - (y1 * scaleV);
         double raster_lr_lat = ROOT_ULLAT - ((y1 + num_tiles_h) * scaleV);
-        System.out.println("y1: " +  y1);
-        System.out.println("y2: " +  y2);
-        System.out.println("num_tiles_h: " +  num_tiles_h);
-        System.out.println("raster_lr_lat: " +  raster_lr_lat);
         fillGrid(render_grid, num_tiles_w, num_tiles_h, x1, y1, depth);
 
         System.out.println("yo, wanna know the parameters given by the web browser? They are:");
